@@ -1,0 +1,283 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-03 12:12:51.978039",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "common_section",
+  "common_column",
+  "sample_type",
+  "date_of_collection",
+  "tapal_number",
+  "farmer_sample_section",
+  "farmer_sample_info_column",
+  "name1",
+  "survey_number",
+  "local_body_type",
+  "panchayath",
+  "village",
+  "ward_number",
+  "plot_size",
+  "crop_planned",
+  "column_break_plth",
+  "consultancy_student_section",
+  "consultancy_student_sample_info_column",
+  "student_name",
+  "institution",
+  "id",
+  "degree_level",
+  "column_break_vomi",
+  "consultancy_department_section",
+  "consultancydepartment_sample_info_column",
+  "department_name",
+  "samples_list",
+  "column_break_cthl",
+  "department_section",
+  "depatment__sample_info_column",
+  "cover_letter",
+  "sample_list",
+  "column_break_mguh",
+  "contact_section",
+  "contact_payment_info_column",
+  "address",
+  "email",
+  "phone",
+  "payment_type",
+  "payment_proof",
+  "column_break_uhpc"
+ ],
+ "fields": [
+  {
+   "fieldname": "survey_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Survey Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date_of_collection",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date Of Collection",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sample_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Sample Type",
+   "options": "Farmer\nConsultancy Student\nConsultancy Departmet\nDepartment",
+   "reqd": 1
+  },
+  {
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "label": "Farmer Name"
+  },
+  {
+   "fieldname": "local_body_type",
+   "fieldtype": "Select",
+   "label": "Local Body Type",
+   "options": "Muncipality\nCorporation\nPanchayat"
+  },
+  {
+   "fieldname": "crop_planned",
+   "fieldtype": "Table",
+   "label": "Crop Planted",
+   "options": "crop child"
+  },
+  {
+   "fieldname": "tapal_number",
+   "fieldtype": "Data",
+   "label": "Tapal Number"
+  },
+  {
+   "fieldname": "farmer_sample_info_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "panchayath",
+   "fieldtype": "Data",
+   "label": "Panchayath"
+  },
+  {
+   "fieldname": "village",
+   "fieldtype": "Data",
+   "label": "Village"
+  },
+  {
+   "fieldname": "ward_number",
+   "fieldtype": "Data",
+   "label": "Ward Number"
+  },
+  {
+   "fieldname": "plot_size",
+   "fieldtype": "Data",
+   "label": "Plot Size"
+  },
+  {
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "label": "Student Name"
+  },
+  {
+   "fieldname": "institution",
+   "fieldtype": "Data",
+   "label": "Institution"
+  },
+  {
+   "fieldname": "id",
+   "fieldtype": "Attach",
+   "label": "ID"
+  },
+  {
+   "fieldname": "degree_level",
+   "fieldtype": "Select",
+   "label": "degree level",
+   "options": "UG\nPG"
+  },
+  {
+   "fieldname": "consultancydepartment_sample_info_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "department_name",
+   "fieldtype": "Data",
+   "label": "Department Name"
+  },
+  {
+   "fieldname": "samples_list",
+   "fieldtype": "Attach",
+   "label": "Samples List"
+  },
+  {
+   "fieldname": "depatment__sample_info_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cover_letter",
+   "fieldtype": "Data",
+   "label": "Cover letter"
+  },
+  {
+   "fieldname": "sample_list",
+   "fieldtype": "Attach",
+   "label": "Sample List "
+  },
+  {
+   "fieldname": "contact_payment_info_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Data",
+   "label": "Address"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "email"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "phone"
+  },
+  {
+   "fieldname": "payment_type",
+   "fieldtype": "Data",
+   "label": "Payment Type"
+  },
+  {
+   "fieldname": "payment_proof",
+   "fieldtype": "Attach",
+   "label": "Payment Proof"
+  },
+  {
+   "fieldname": "common_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "consultancy_student_sample_info_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "common_section",
+   "fieldtype": "Section Break",
+   "label": "common"
+  },
+  {
+   "fieldname": "farmer_sample_section",
+   "fieldtype": "Section Break",
+   "label": "farmer sample"
+  },
+  {
+   "fieldname": "column_break_plth",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "consultancy_student_section",
+   "fieldtype": "Section Break",
+   "label": "consultancy student"
+  },
+  {
+   "fieldname": "column_break_vomi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "consultancy_department_section",
+   "fieldtype": "Section Break",
+   "label": "consultancy department"
+  },
+  {
+   "fieldname": "column_break_cthl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "department_section",
+   "fieldtype": "Section Break",
+   "label": "department"
+  },
+  {
+   "fieldname": "column_break_mguh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contact_section",
+   "fieldtype": "Section Break",
+   "label": "contact"
+  },
+  {
+   "fieldname": "column_break_uhpc",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-04 22:30:43.387440",
+ "modified_by": "navaneethkg@icfoss.org",
+ "module": "Slis App",
+ "name": "Soil Sample Collection",
+ "owner": "navaneethkg@icfoss.org",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
