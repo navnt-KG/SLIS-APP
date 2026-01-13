@@ -1,1 +1,46 @@
-[]
+[
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Soil Sample Collection",
+  "enabled": 1,
+  "modified": "2026-01-06 16:01:33.966770",
+  "module": "Slis App",
+  "name": "form view",
+  "script": "frappe.ui.form.on('Soil Sample Collection', {\n    // 1. Trigger when the form loads\n    refresh: function(frm) {\n        frm.trigger('sample_type');\n    },\n\n    // 2. Trigger whenever the 'sample_type' field is changed\n    sample_type: function(frm) {\n        console.log(\"Sample Type changed to: \" + frm.doc.sample_type);\n\n        // List of Section/Column fieldnames to toggle\n        const specific_columns = [\n            'farmer_sample_section',\n            'consultancy_student_section',\n            'consultancy_department_section',\n            'department_section'\n        ];\n\n        // Hide everything first\n        specific_columns.forEach(col => {\n            frm.set_df_property(col, 'hidden', 1);\n        });\n\n        // Always show common fields\n        frm.set_df_property('common_section', 'hidden', 0);\n        frm.set_df_property('contact_section', 'hidden', 0);\n\n        // Show the relevant section based on selection\n        if (frm.doc.sample_type === 'Farmer') {\n            frm.set_df_property('farmer_sample_section', 'hidden', 0);\n        } \n        else if (frm.doc.sample_type === 'Consultancy Student') {\n            frm.set_df_property('consultancy_student_section', 'hidden', 0);\n        } \n        else if (frm.doc.sample_type === 'Consultancy Departmet') { \n            // Note: Keep the typo 'Departmet' if that is exactly how it is in your \"Options\"\n            frm.set_df_property('consultancy_department_section', 'hidden', 0);\n        } \n        else if (frm.doc.sample_type === 'Department') {\n            frm.set_df_property('department_section', 'hidden', 0);\n        }\n\n        // Force the UI to refresh the hidden/visible state\n        frm.refresh_fields();\n    }\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Soil Sample Collection",
+  "enabled": 1,
+  "modified": "2026-01-06 16:04:32.149844",
+  "module": "Slis App",
+  "name": "district option",
+  "script": "frappe.ui.form.on('Soil Sample Collection', {\n    refresh: function(frm) {\n        console.log(\"Script Loaded: Setting District query...\");\n        \n        frm.set_query('district', function() {\n            console.log(\"District dropdown was clicked!\"); // This triggers when you open the dropdown\n            return {\n                filters: {}\n            };\n        });\n    }\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Soil Sample Collection",
+  "enabled": 1,
+  "modified": "2026-01-07 12:44:41.085743",
+  "module": "Slis App",
+  "name": "panch dist",
+  "script": "frappe.ui.form.on('Soil Sample Collection', {\n    onload: function(frm) {\n        // This will pop up as soon as you open the form\n        // frappe.msgprint(\"Script Loaded: Filter is being applied to Panchayat\");\n\n        frm.set_query('panchayath', function() {\n            return {\n                filters: {\n                    'district': frm.doc.district \n                }\n            };\n        });\n    },\n    district: function(frm) {\n        // This will pop up when you change the District value\n        // frappe.msgprint(\"District changed to: \" + frm.doc.district + \". Clearing Panchayat field.\");\n        \n        frm.set_value('panchayath', '');\n    }\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Soil Sample Collection",
+  "enabled": 1,
+  "modified": "2026-01-08 15:00:27.291308",
+  "module": "Slis App",
+  "name": "package script",
+  "script": "frappe.ui.form.on('Soil Sample Collection', {\n    refresh: function(frm) {\n        // Filter the Child Table search based on Sample Type\n        frm.set_query('test_item', 'test_table', function() {\n            let categories = [];\n            if (frm.doc.sample_type === 'Farmer') {\n                categories = ['Group A', 'Group B'];\n            } else {\n                categories = ['Individual'];\n            }\n            return {\n                filters: [\n                    ['Soil Test Package', 'category', 'in', categories]\n                ]\n            };\n        });\n    },\n    sample_type: function(frm) {\n        // Clear the table if user changes sample type to avoid pricing errors\n        frm.clear_table('test_table');\n        frm.refresh_field('test_table');\n        frm.set_value('total_amount', 0);\n    }\n});\n\n// Logic inside the Child Table\nfrappe.ui.form.on('Soil Test Selection', {\n    test_item: function(frm, cdt, cdn) {\n        let row = locals[cdt][cdn];\n        if (row.test_item) {\n            // Fetch the rate from the Master DocType\n            frappe.db.get_value('Soil Test Package', row.test_item, 'rate', (r) => {\n                frappe.model.set_value(cdt, cdn, 'rate', r.rate);\n                calculate_total(frm);\n            });\n        }\n    },\n    test_table_remove: function(frm) {\n        calculate_total(frm);\n    }\n});\n\nfunction calculate_total(frm) {\n    let total = 0;\n    (frm.doc.test_table || []).forEach(row => {\n        total += row.rate;\n    });\n    frm.set_value('total_amount', total);\n}",
+  "view": "Form"
+ }
+]
