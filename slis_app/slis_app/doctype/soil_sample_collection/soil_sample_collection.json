@@ -21,7 +21,7 @@
   "village",
   "ward_number",
   "plot_size",
-  "crop_planned",
+  "status",
   "consultancy_student_section",
   "consultancy_student_sample_info_column",
   "student_name",
@@ -36,16 +36,14 @@
   "depatment__sample_info_column",
   "cover_letter",
   "sample_list",
-  "section_break_gihl",
-  "test_table",
-  "total_amount",
   "contact_section",
   "contact_payment_info_column",
   "address",
   "email",
   "phone",
   "payment_type",
-  "payment_proof"
+  "payment_proof",
+  "amended_from"
  ],
  "fields": [
   {
@@ -80,12 +78,6 @@
    "fieldtype": "Select",
    "label": "Local Body Type",
    "options": "Muncipality\nCorporation\nPanchayat"
-  },
-  {
-   "fieldname": "crop_planned",
-   "fieldtype": "Table",
-   "label": "Crop Planted",
-   "options": "crop child"
   },
   {
    "fieldname": "tapal_number",
@@ -240,31 +232,33 @@
    "options": "District"
   },
   {
-   "fieldname": "section_break_gihl",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "test_table",
-   "fieldtype": "Table",
-   "label": "Selected Tests",
-   "options": "Soil Test Selection"
-  },
-  {
-   "fieldname": "total_amount",
-   "fieldtype": "Read Only",
-   "label": "Total Amount"
-  },
-  {
    "fieldname": "lab_name",
    "fieldtype": "Data",
    "label": "Lab Name"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "status"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Soil Sample Collection",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-01-12 12:07:30.929549",
- "modified_by": "navaneethkg@icfoss.org",
+ "modified": "2026-01-14 10:41:35.215080",
+ "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",
  "owner": "navaneethkg@icfoss.org",

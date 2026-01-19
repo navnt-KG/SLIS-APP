@@ -174,9 +174,10 @@ app_license = "mit"
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "slis_app.event.get_events"
-# }
+override_whitelisted_methods = {
+ 	
+    "frappe.desk.search.search_link": "slis_app.api.assignment.filtered_user_search"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
@@ -250,4 +251,19 @@ app_license = "mit"
 fixtures = [
     
     {"dt": "Client Script", "filters": [["module", "=", "Slis App"]]}
+]
+
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Employee-custom_lab_name_",
+                ]
+            ]
+        ]
+    }
 ]
