@@ -9,41 +9,57 @@
   "common_column",
   "sample_type",
   "date_of_collection",
+  "lab_register_created",
+  "column_break_pemb",
   "tapal_number",
   "lab_name",
   "farmer_sample_section",
   "farmer_sample_info_column",
   "name1",
   "survey_number",
+  "ward_number",
+  "plot_size",
+  "status",
+  "column_break_zgfz",
   "district",
   "local_body_type",
   "panchayath",
   "village",
-  "ward_number",
-  "plot_size",
-  "status",
   "consultancy_student_section",
   "consultancy_student_sample_info_column",
   "student_name",
   "institution",
+  "column_break_xxkj",
   "id",
   "degree_level",
   "consultancy_department_section",
   "consultancydepartment_sample_info_column",
   "department_name",
+  "column_break_nlfv",
   "samples_list",
   "department_section",
   "depatment__sample_info_column",
   "cover_letter",
+  "column_break_nyyf",
   "sample_list",
   "contact_section",
   "contact_payment_info_column",
   "address",
   "email",
   "phone",
+  "column_break_cnth",
   "payment_type",
   "payment_proof",
-  "amended_from"
+  "amended_from",
+  "total_samples",
+  "bulk_samples_section",
+  "bulk_samples",
+  "section_break_risr",
+  "test_packages",
+  "total_amount",
+  "column_break_cbks",
+  "discount",
+  "discount_price"
  ],
  "fields": [
   {
@@ -51,7 +67,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Survey Number",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.sample_type==\"Farmer\""
   },
   {
    "fieldname": "date_of_collection",
@@ -251,13 +267,91 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "section_break_risr",
+   "fieldtype": "Section Break",
+   "label": "Pricing and Rate"
+  },
+  {
+   "fieldname": "test_packages",
+   "fieldtype": "Table",
+   "label": "Test  Rates",
+   "options": "test rates CT"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Data",
+   "label": "Total Amount"
+  },
+  {
+   "fieldname": "column_break_pemb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_zgfz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_xxkj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_nlfv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_nyyf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cnth",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cbks",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "discount",
+   "fieldtype": "Percent",
+   "label": "Discount (%)"
+  },
+  {
+   "fieldname": "discount_price",
+   "fieldtype": "Data",
+   "label": "Discount Price"
+  },
+  {
+   "fieldname": "bulk_samples_section",
+   "fieldtype": "Section Break",
+   "label": "Bulk samples"
+  },
+  {
+   "fieldname": "bulk_samples",
+   "fieldtype": "Table",
+   "label": "Sample Collection Item",
+   "options": "Sample Collection Item"
+  },
+  {
+   "default": "0",
+   "fieldname": "lab_register_created",
+   "fieldtype": "Check",
+   "label": "Lab Register Created",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_samples",
+   "fieldtype": "Int",
+   "label": "Total Samples",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-14 10:41:35.215080",
+ "modified": "2026-02-05 17:27:13.587041",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",
@@ -300,7 +394,6 @@
   }
  ],
  "row_format": "Dynamic",
- "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-23 11:33:20.107649",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_c0qu",
+  "sample_id",
+  "clients_id",
+  "column_break_zywg",
+  "clients_name",
+  "lab_name",
+  "test_details_section",
+  "table_pjbf",
+  "lab_results_section",
+  "lab_results",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_c0qu",
+   "fieldtype": "Section Break",
+   "label": "Sample Details"
+  },
+  {
+   "fieldname": "sample_id",
+   "fieldtype": "Data",
+   "label": "Sample ID"
+  },
+  {
+   "fieldname": "clients_id",
+   "fieldtype": "Data",
+   "label": "Client's ID"
+  },
+  {
+   "fieldname": "column_break_zywg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "clients_name",
+   "fieldtype": "Data",
+   "label": "Client's Name"
+  },
+  {
+   "fieldname": "lab_name",
+   "fieldtype": "Data",
+   "label": "Lab Name"
+  },
+  {
+   "fieldname": "test_details_section",
+   "fieldtype": "Section Break",
+   "label": "Test Details"
+  },
+  {
+   "fieldname": "table_pjbf",
+   "fieldtype": "Table",
+   "options": "test rates CT"
+  },
+  {
+   "fieldname": "lab_results_section",
+   "fieldtype": "Section Break",
+   "label": "Lab Results"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Sample Testing",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "lab_results",
+   "fieldtype": "Table",
+   "label": "Result",
+   "options": "Test Result CT"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-01-28 16:17:17.132539",
+ "modified_by": "Administrator",
+ "module": "Slis App",
+ "name": "Sample Testing",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
