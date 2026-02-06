@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-27 17:17:46.209803",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_s6dd",
+  "amended_from",
+  "test_name",
+  "formula",
+  "input_1",
+  "input_2",
+  "input_3",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_s6dd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Test Equation Master",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "test_name",
+   "fieldtype": "Data",
+   "label": "Test Name"
+  },
+  {
+   "fieldname": "formula",
+   "fieldtype": "Small Text",
+   "label": "Formula"
+  },
+  {
+   "fieldname": "input_1",
+   "fieldtype": "Data",
+   "label": "Input 1"
+  },
+  {
+   "fieldname": "input_2",
+   "fieldtype": "Data",
+   "label": "Input 2"
+  },
+  {
+   "fieldname": "input_3",
+   "fieldtype": "Data",
+   "label": "Input 3"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-27 17:21:45.591082",
+ "modified_by": "Administrator",
+ "module": "Slis App",
+ "name": "Test Equation Master",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

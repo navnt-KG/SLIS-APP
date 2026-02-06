@@ -175,7 +175,8 @@ app_license = "mit"
 # ------------------------------
 #
 # override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "slis_app.event.get_events"
+ 	
+#     "frappe.desk.search.search_link": "slis_app.api.assignment.filtered_user_search"
 # }
 #
 # each overriding function accepts a `data` argument;
@@ -246,4 +247,21 @@ app_license = "mit"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
+
+fixtures = [
+    {
+        "dt": "Client Script",
+        "filters": [
+            ["module", "=", "Slis App"]
+        ]
+    },
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["name", "in", [
+                "Employee-custom_lab_name_",
+            ]]
+        ]
+    }
+]
 

@@ -9,43 +9,57 @@
   "common_column",
   "sample_type",
   "date_of_collection",
+  "lab_register_created",
+  "column_break_pemb",
   "tapal_number",
+  "lab_name",
   "farmer_sample_section",
   "farmer_sample_info_column",
   "name1",
   "survey_number",
+  "ward_number",
+  "plot_size",
+  "status",
+  "column_break_zgfz",
+  "district",
   "local_body_type",
   "panchayath",
   "village",
-  "ward_number",
-  "plot_size",
-  "crop_planned",
-  "column_break_plth",
   "consultancy_student_section",
   "consultancy_student_sample_info_column",
   "student_name",
   "institution",
+  "column_break_xxkj",
   "id",
   "degree_level",
-  "column_break_vomi",
   "consultancy_department_section",
   "consultancydepartment_sample_info_column",
   "department_name",
+  "column_break_nlfv",
   "samples_list",
-  "column_break_cthl",
   "department_section",
   "depatment__sample_info_column",
   "cover_letter",
+  "column_break_nyyf",
   "sample_list",
-  "column_break_mguh",
   "contact_section",
   "contact_payment_info_column",
   "address",
   "email",
   "phone",
+  "column_break_cnth",
   "payment_type",
   "payment_proof",
-  "column_break_uhpc"
+  "amended_from",
+  "total_samples",
+  "bulk_samples_section",
+  "bulk_samples",
+  "section_break_risr",
+  "test_packages",
+  "total_amount",
+  "column_break_cbks",
+  "discount",
+  "discount_price"
  ],
  "fields": [
   {
@@ -53,7 +67,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Survey Number",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.sample_type==\"Farmer\""
   },
   {
    "fieldname": "date_of_collection",
@@ -82,12 +96,6 @@
    "options": "Muncipality\nCorporation\nPanchayat"
   },
   {
-   "fieldname": "crop_planned",
-   "fieldtype": "Table",
-   "label": "Crop Planted",
-   "options": "crop child"
-  },
-  {
    "fieldname": "tapal_number",
    "fieldtype": "Data",
    "label": "Tapal Number"
@@ -98,8 +106,9 @@
   },
   {
    "fieldname": "panchayath",
-   "fieldtype": "Data",
-   "label": "Panchayath"
+   "fieldtype": "Link",
+   "label": "Panchayath",
+   "options": "Panchayat"
   },
   {
    "fieldname": "village",
@@ -213,17 +222,9 @@
    "label": "farmer sample"
   },
   {
-   "fieldname": "column_break_plth",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "consultancy_student_section",
    "fieldtype": "Section Break",
    "label": "consultancy student"
-  },
-  {
-   "fieldname": "column_break_vomi",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "consultancy_department_section",
@@ -231,17 +232,9 @@
    "label": "consultancy department"
   },
   {
-   "fieldname": "column_break_cthl",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "department_section",
    "fieldtype": "Section Break",
    "label": "department"
-  },
-  {
-   "fieldname": "column_break_mguh",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "contact_section",
@@ -249,15 +242,117 @@
    "label": "contact"
   },
   {
-   "fieldname": "column_break_uhpc",
+   "fieldname": "district",
+   "fieldtype": "Link",
+   "label": "District",
+   "options": "District"
+  },
+  {
+   "fieldname": "lab_name",
+   "fieldtype": "Data",
+   "label": "Lab Name"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "status"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Soil Sample Collection",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "section_break_risr",
+   "fieldtype": "Section Break",
+   "label": "Pricing and Rate"
+  },
+  {
+   "fieldname": "test_packages",
+   "fieldtype": "Table",
+   "label": "Test  Rates",
+   "options": "test rates CT"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Data",
+   "label": "Total Amount"
+  },
+  {
+   "fieldname": "column_break_pemb",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_zgfz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_xxkj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_nlfv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_nyyf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cnth",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cbks",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "discount",
+   "fieldtype": "Percent",
+   "label": "Discount (%)"
+  },
+  {
+   "fieldname": "discount_price",
+   "fieldtype": "Data",
+   "label": "Discount Price"
+  },
+  {
+   "fieldname": "bulk_samples_section",
+   "fieldtype": "Section Break",
+   "label": "Bulk samples"
+  },
+  {
+   "fieldname": "bulk_samples",
+   "fieldtype": "Table",
+   "label": "Sample Collection Item",
+   "options": "Sample Collection Item"
+  },
+  {
+   "default": "0",
+   "fieldname": "lab_register_created",
+   "fieldtype": "Check",
+   "label": "Lab Register Created",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_samples",
+   "fieldtype": "Int",
+   "label": "Total Samples",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-01-04 22:30:43.387440",
- "modified_by": "navaneethkg@icfoss.org",
+ "modified": "2026-02-05 17:27:13.587041",
+ "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",
  "owner": "navaneethkg@icfoss.org",
@@ -273,10 +368,32 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Lab Assistant",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Senior Chemist",
+   "share": 1,
+   "write": 1
   }
  ],
  "row_format": "Dynamic",
- "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
