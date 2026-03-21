@@ -614,5 +614,16 @@
   "name": "global hiding awesome",
   "script": "frappe.ui.toolbar.setup_search = function() {\n    // Overriding the search setup function to do nothing\n    $('.search-bar').hide();\n};\n\n$(document).ready(function() {\n    $('.search-bar').hide();\n    $('.navbar-search').hide();\n});",
   "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Soil Sample Collection",
+  "enabled": 1,
+  "modified": "2026-03-21 14:56:43.466327",
+  "module": "Slis App",
+  "name": "Button add soil sample collection",
+  "script": "frappe.listview_settings['Soil Sample Collection'] = {\n    onload: function(listview) {\n\n        setTimeout(() => {\n\n            // Target the Add button\n            let add_btn = listview.page.btn_primary;\n\n            if (add_btn) {\n\n                // Remove default click\n                add_btn.off(\"click\");\n\n                // Add custom click\n                add_btn.on(\"click\", function() {\n\n                    frappe.msgprint(\" samples only through client \");\n\n                    // OPTIONAL: prevent navigation (default already blocked)\n                    return false;\n                });\n            }\n\n        }, 100);\n\n    }\n};",
+  "view": "Form"
  }
 ]
