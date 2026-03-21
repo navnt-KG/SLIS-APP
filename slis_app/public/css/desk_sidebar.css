@@ -52,35 +52,3 @@
     border-radius: 0 4px 4px 0;
 }
 
-/* Target the v15 search container specifically */
-.navbar .search-bar, 
-.navbar .search-container,
-.navbar-search,
-#navbar-search,
-header [role="search"],
-.search-icon {
-    display: none !important;
-    visibility: hidden !important;
-    width: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-/* Re-align the navbar elements to fill the gap */
-header.navbar .container-fluid {
-    display: flex !important;
-    justify-content: space-between !important;
-}
-
-/* Ensure the logo stays left and user profile stays right */
-.navbar-left {
-    flex: 1 !important;
-}
-
-.navbar-right {
-    flex: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-}
