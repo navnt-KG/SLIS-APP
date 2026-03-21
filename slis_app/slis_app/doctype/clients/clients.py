@@ -139,3 +139,52 @@ class Clients(Document):
         # 7. Generate Final Name
         # Format: CL-FS-ALP-.#####
         self.name = make_autoname(f"{prefix}-{lab_code}-.#####")
+
+
+
+
+#user permision to only see the clients created by their lab or district office
+
+import frappe
+
+def get_permission_query_conditions(user):
+    if not user:
+        user = frappe.session.user
+
+    # Allow Administrator full access
+    if user == "Administrator":
+        return ""
+
+    lab = frappe.db.get_value(
+        "Employee",
+        {"user_id": user},
+        "custom_lab_name"
+    )
+
+    if lab:
+        return f"`tabClients`.`login_lab_name` = '{lab}'"
+
+    return "1=0"
+
+
+def has_permission(doc, user=None):
+    if not user:
+        user = frappe.session.user
+
+    # Allow Administrator full access
+    if user == "Administrator":
+        return True
+
+    lab = frappe.db.get_value(
+        "Employee",
+        {"user_id": user},
+        "custom_lab_name"
+    )
+
+    if not lab:
+        return False
+
+    if doc.login_lab_name != lab:
+        return False
+
+    return True

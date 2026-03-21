@@ -9,16 +9,17 @@
   "client_type",
   "contact_number",
   "alternate_contact_number",
+  "login_lab_name",
   "column_break_pesw",
   "address",
   "mail_id",
-  "lab_name",
   "farmer_section_section",
   "farmer_name",
   "department_section_section",
   "column_break_vtbg",
   "type_of_collection",
   "name_of_type",
+  "scheme_name",
   "column_break_rlmh",
   "campaign_date",
   "consultancy_section_section",
@@ -151,21 +152,29 @@
    "label": "Alternate Contact Number ( Whatsapp )"
   },
   {
-   "fieldname": "lab_name",
-   "fieldtype": "Data",
-   "label": "Lab Name"
-  },
-  {
    "depends_on": "eval:doc.type_of_collection==\"Scheme\"",
    "fieldname": "name_of_type",
    "fieldtype": "Data",
    "label": "Name of Type"
+  },
+  {
+   "fieldname": "scheme_name",
+   "fieldtype": "Link",
+   "label": "Scheme Name",
+   "options": "Schemes"
+  },
+  {
+   "fieldname": "login_lab_name",
+   "fieldtype": "Link",
+   "label": "Collection Lab",
+   "options": "Soil Laboratory",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-19 11:54:37.524298",
+ "modified": "2026-03-20 21:28:53.286257",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Clients",

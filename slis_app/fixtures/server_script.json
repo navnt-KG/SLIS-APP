@@ -169,5 +169,43 @@
   "reference_doctype": null,
   "script": "# Get the GO name passed from the Client Script\ngo_name = frappe.form_dict.get(\"go\")\nresult = []\n\nif go_name:\n    # 1. Get all rate history rows linked to this GO\n    rate_rows = frappe.get_all(\n        \"Service Rate History\",\n        filters={\"government_order\": go_name},\n        fields=[\"parent\", \"rate\", \"effective_from\"],\n        order_by=\"effective_from desc\"\n    )\n\n    seen_services = set()\n\n    for row in rate_rows:\n        # 2. Only take the latest rate for each unique service\n        if row.parent in seen_services:\n            continue\n        \n        seen_services.add(row.parent)\n\n        # 3. Fetch the Service Item details (Category and Name)\n        # Using get_value is faster than get_doc for simple fields\n        service_info = frappe.db.get_value(\n            \"Soil Service Item\", \n            row.parent, \n            [\"service_name\", \"service_category\"], \n            as_dict=True\n        )\n\n        if service_info:\n            result.append({\n                \"service\": row.parent,\n                \"service_name\": service_info.service_name,\n                \"category\": service_info.service_category,\n                \"rate\": row.rate,\n                \"effective_from\": row.effective_from\n            })\n\n# Return the list to the Client Script\nfrappe.response[\"message\"] = result",
   "script_type": "API"
+ },
+ {
+  "allow_guest": 0,
+  "api_method": null,
+  "cron_format": null,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Server Script",
+  "doctype_event": "After Save",
+  "enable_rate_limit": 0,
+  "event_frequency": "All",
+  "modified": "2026-03-20 20:22:37.468696",
+  "module": "Slis App",
+  "name": "session user see the clients list basis on lab",
+  "rate_limit_count": 5,
+  "rate_limit_seconds": 86400,
+  "reference_doctype": "Employee",
+  "script": "if doc.user_id and doc.custom_lab_name:\n    # delete old permission\n    frappe.db.delete(\"User Permission\", {\n        \"user\": doc.user_id,\n        \"allow\": \"Soil Laboratory\"\n    })\n\n    # create new permission\n    frappe.get_doc({\n        \"doctype\": \"User Permission\",\n        \"user\": doc.user_id,\n        \"allow\": \"Soil Laboratory\",\n        \"for_value\": doc.custom_lab_name,\n        \"apply_to_all_doctypes\": 0,\n        \"applicable_for\": \"Client\"\n    }).insert(ignore_permissions=True)",
+  "script_type": "DocType Event"
+ },
+ {
+  "allow_guest": 0,
+  "api_method": null,
+  "cron_format": null,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Server Script",
+  "doctype_event": "Before Save",
+  "enable_rate_limit": 0,
+  "event_frequency": "All",
+  "modified": "2026-03-21 11:52:09.960420",
+  "module": "Slis App",
+  "name": "Soil Test Result Server Script",
+  "rate_limit_count": 5,
+  "rate_limit_seconds": 86400,
+  "reference_doctype": "Soil Test Result",
+  "script": "# Build a map of old temp names → new real names isn't possible server side\n# Instead, re-link variable_inputs using test_item as the stable key\n\nresult_map = {}\nfor row in doc.results_table:\n    result_map[row.test_item] = row.name\n\nfor var_row in doc.variable_inputs:\n    if var_row.test_item and var_row.test_item in result_map:\n        correct_parent = result_map[var_row.test_item]\n        if var_row.parent_test_row != correct_parent:\n            var_row.parent_test_row = correct_parent",
+  "script_type": "DocType Event"
  }
 ]

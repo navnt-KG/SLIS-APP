@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:fertilizer_name",
  "creation": "2026-02-10 15:26:27.875491",
@@ -32,7 +33,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-10 15:29:35.819123",
+ "modified": "2026-03-20 11:38:43.965939",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Fertilizer",
@@ -44,6 +45,7 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "import": 1,
    "print": 1,
    "read": 1,
    "report": 1,

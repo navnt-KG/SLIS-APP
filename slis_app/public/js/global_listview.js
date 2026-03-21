@@ -9,6 +9,7 @@ frappe.listview_settings['*'] = {
         if (!has_permission) {
             setTimeout(() => {
                 $(".layout-side-section").hide();
+
             }, 100);
         }
     }

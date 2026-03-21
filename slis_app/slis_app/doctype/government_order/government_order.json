@@ -11,12 +11,11 @@
   "go_date",
   "effective_from",
   "amended_from",
-  "column_break_zngj",
   "department",
+  "column_break_zngj",
   "description",
   "is_active",
   "attachment",
-  "remark",
   "fetch_services",
   "section_break_vbdb",
   "services_and_rates"
@@ -89,11 +88,6 @@
    "options": "GO Service Details"
   },
   {
-   "fieldname": "remark",
-   "fieldtype": "Small Text",
-   "label": "Remark"
-  },
-  {
    "fieldname": "fetch_services",
    "fieldtype": "Button",
    "label": "Fetch Services"
@@ -101,9 +95,8 @@
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2026-03-19 16:38:25.117311",
+ "modified": "2026-03-20 17:11:51.254336",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Government Order",
@@ -121,7 +114,6 @@
    "role": "System Manager",
    "select": 1,
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],

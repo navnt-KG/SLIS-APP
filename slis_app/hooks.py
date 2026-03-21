@@ -254,8 +254,16 @@ app_include_js = "/assets/slis_app/js/global_listview.js"
 
 
 permission_query_conditions = {
-    "Soil Sample Collection": "slis_app.api.Permission.sample_permission_query"
+    "Soil Sample Collection": "slis_app.api.Permission.sample_permission_query",
+    "Clients": "slis_app.slis_app.doctype.clients.clients.get_permission_query_conditions"
 }
+
+has_permission = {
+    "Clients": "slis_app.slis_app.doctype.clients.clients.has_permission"
+}
+
+
+
 
 
 # # lab wise view permission for the soil samples
@@ -311,6 +319,13 @@ fixtures = [
      # Workflow State
       {
         "doctype": "Workflow State"
+    },
+    {
+        "doctype": "Role",
+        "filters": [
+            ["role_name", "=", "auto workflow"]
+        ]
+
     }
 ]
 
