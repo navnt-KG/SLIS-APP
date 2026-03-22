@@ -60,30 +60,40 @@ frappe.ui.form.on('Soil Sample Collection', {
 
 
 
+//code for the add to register in the form view
+
+
 frappe.ui.form.on('Soil Sample Collection', {
     refresh: function(frm) {
-        // Add the "Add to Register" button to the Actions menu
-        frm.add_custom_button(__('Add to Register'), () => {
-            create_register_from_list(frm.doc);
-        }, __('Actions'));
+
+        frm.page.clear_primary_action();
+
+        if (!frm.is_new()) {
+            frm.add_custom_button(__('Add to Register'), () => {
+
+                //  Validate status before proceeding
+                //  Change this to 'status' if you're NOT using workflow
+                let current_status = frm.doc.status;
+
+                if (current_status !== "With Research Assistant") {
+                    frappe.msgprint(__('Only the samples that are with RA are allowed to move to register.'));
+                    return; //  Stop here
+                }
+
+                // If valid, proceed
+                create_register_from_list(frm.doc);
+            });
+        }
     }
 });
 
-// Helper function to handle the data mapping
 function create_register_from_list(doc) {
     frappe.model.with_doctype('Register', () => {
-        // Create a new local instance of a Register document
         let new_reg = frappe.model.get_new_doc('Register');
-        
-        // --- MAPPING LOGIC ---
-        // 'doc.name' is the ID of the current Soil Sample Collection record
-        new_reg.source_sample_id = doc.name; 
-        
-        // Map other fields as needed
-        new_reg.client = doc.client; // Example: mapping client name
-        // new_reg.other_field = doc.other_field;
 
-        // Redirect the user to the new Register form with the data pre-filled
+        new_reg.source_sample_id = doc.name; 
+        new_reg.client = doc.client; 
+
         frappe.set_route('Form', 'Register', new_reg.name);
     });
 }

@@ -18,9 +18,7 @@
   "department_section_section",
   "column_break_vtbg",
   "type_of_collection",
-  "name_of_type",
-  "scheme_name",
-  "column_break_rlmh",
+  "name_of_type
   "campaign_date",
   "consultancy_section_section",
   "consultancy_type",
@@ -152,18 +150,6 @@
    "label": "Alternate Contact Number ( Whatsapp )"
   },
   {
-   "depends_on": "eval:doc.type_of_collection==\"Scheme\"",
-   "fieldname": "name_of_type",
-   "fieldtype": "Data",
-   "label": "Name of Type"
-  },
-  {
-   "fieldname": "scheme_name",
-   "fieldtype": "Link",
-   "label": "Scheme Name",
-   "options": "Schemes"
-  },
-  {
    "fieldname": "login_lab_name",
    "fieldtype": "Link",
    "label": "Collection Lab",
@@ -172,13 +158,13 @@
   }
  ],
  "grid_page_length": 50,
- "index_web_pages_for_search": 1,
+ "index_web_pagesname_of_type
  "links": [],
- "modified": "2026-03-20 21:28:53.286257",
+ "modified": "2026-03-22 15:35:08.986181",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Clients",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

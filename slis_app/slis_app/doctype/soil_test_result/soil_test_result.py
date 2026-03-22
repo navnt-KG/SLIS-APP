@@ -122,14 +122,11 @@ def generate_recommendation(docname):
     # -----------------------------------
 
     for row in doc.results_table:
-
-        if row.test_item == "Organic Carbon":
+        if row.test_item and "Organic Carbon" in row.test_item:
             organic_carbon = float(row.final_result)
-
-        elif row.test_item == "Available Phosphorous":
+        elif row.test_item and "Available Phosphorous" in row.test_item:
             available_p = float(row.final_result)
-
-        elif row.test_item == "Available Potassium":
+        elif row.test_item and "Available Potassium" in row.test_item:
             available_k = float(row.final_result)
 
 
@@ -229,7 +226,7 @@ def generate_recommendation(docname):
         )
 
         if not pop_name:
-            frappe.msgprint(f"No Package of Practice found for {crop}")
+            # frappe.msgprint(f"No Package of Practice found for {crop}")
             continue
 
 
@@ -241,13 +238,27 @@ def generate_recommendation(docname):
         n_required = 0
         p_required = 0
         k_required = 0
+        n_unit = '' 
+        p_unit = ''  
+        k_unit = '' 
 
 
         # -----------------------------------
         #  Read PoP Nutrient Values
         # -----------------------------------
 
+ 
         for nutrient in pop.nutrient_data:
+            if nutrient.nutrient and "Available Nitrogen" in nutrient.nutrient and organic_carbon is not None:
+                n_required = float(nutrient.quantity) * n_adjust / 100
+                n_unit = nutrient.unit or ''  # ADD THIS
+            elif nutrient.nutrient and "Available Phosphorous" in nutrient.nutrient and available_p is not None:
+                p_required = float(nutrient.quantity) * pk_adjust / 100
+                p_unit = nutrient.unit or ''  # ADD THIS
+            elif nutrient.nutrient and "Available Potassium" in nutrient.nutrient and available_k is not None:
+                k_required = float(nutrient.quantity) * pk_adjust / 100
+                k_unit = nutrient.unit or ''  # ADD THIS
+
 
 #             frappe.msgprint(f"""
 # PoP Nutrient Row
@@ -257,14 +268,14 @@ def generate_recommendation(docname):
 # """)
 
 
-            if nutrient.nutrient == "Available Nitrogen" and organic_carbon is not None:
-                n_required = float(nutrient.quantity) * n_adjust / 100
+            # if nutrient.nutrient == "Available Nitrogen" and organic_carbon is not None:
+            #     n_required = float(nutrient.quantity) * n_adjust / 100
 
-            elif nutrient.nutrient == "Available Phosphorous" and available_p is not None:
-                p_required = float(nutrient.quantity) * pk_adjust / 100
+            # elif nutrient.nutrient == "Available Phosphorous" and available_p is not None:
+            #     p_required = float(nutrient.quantity) * pk_adjust / 100
 
-            elif nutrient.nutrient == "Available Potassium" and available_k is not None:
-                k_required = float(nutrient.quantity) * pk_adjust / 100
+            # elif nutrient.nutrient == "Available Potassium" and available_k is not None:
+            #     k_required = float(nutrient.quantity) * pk_adjust / 100
 
 
 #         frappe.msgprint(f"""
@@ -286,20 +297,20 @@ def generate_recommendation(docname):
 
 
         fert_n_name = frappe.db.get_value(
-            "Fertilizer",
-            {"primary_nutrient": "Available Nitrogen"},
-            "name"
+        "Fertilizer",
+        {"primary_nutrient": ["like", "%Available Nitrogen%"]},
+        "name"
         )
 
         fert_p_name = frappe.db.get_value(
             "Fertilizer",
-            {"primary_nutrient": "Available Phosphorous"},
+            {"primary_nutrient": ["like", "%Available Phosphorous%"]},
             "name"
         )
 
         fert_k_name = frappe.db.get_value(
             "Fertilizer",
-            {"primary_nutrient": "Available Potassium"},
+            {"primary_nutrient": ["like", "%Available Potassium%"]},
             "name"
         )
 
@@ -361,6 +372,8 @@ def generate_recommendation(docname):
         row.urea = round(urea, 2)
         row.rajphos = round(rajphos, 2)
         row.potash = round(potash, 2)
+        row.unit = n_unit
+
 
 
     # -----------------------------------

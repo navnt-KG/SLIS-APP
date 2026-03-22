@@ -9,8 +9,7 @@
   "longitude",
   "tests",
   "client_type",
-  "crops_list",
-  "plot_size"
+  "crops_list"
  ],
  "fields": [
   {
@@ -45,17 +44,12 @@
    "fieldtype": "Table",
    "label": "Crops List",
    "options": "Crops"
-  },
-  {
-   "fieldname": "plot_size",
-   "fieldtype": "Data",
-   "label": "Plot SIze"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-10 16:07:18.730471",
+ "modified": "2026-03-22 16:40:48.789110",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Register",

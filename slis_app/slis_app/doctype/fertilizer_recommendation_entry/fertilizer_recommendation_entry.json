@@ -10,6 +10,7 @@
   "urea",
   "rajphos",
   "potash",
+  "unit",
   "recommendation_text"
  ],
  "fields": [
@@ -42,13 +43,19 @@
    "fieldtype": "Text Editor",
    "in_list_view": 1,
    "label": "Recommendation Text"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-10 14:58:43.196874",
+ "modified": "2026-03-22 10:27:52.061775",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Fertilizer Recommendation Entry",
