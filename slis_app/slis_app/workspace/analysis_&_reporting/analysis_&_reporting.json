@@ -1,0 +1,111 @@
+{
+ "charts": [
+  {
+   "chart_name": "Employee Wise Sample Status",
+   "label": "Employee WorkStatus"
+  }
+ ],
+ "content": "[{\"id\":\"B9-kDSAVwm\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Employee WorkStatus\",\"col\":12}},{\"id\":\"HZkZPgncCC\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Lab Register\",\"col\":8}},{\"id\":\"GD6jw2bnjd\",\"type\":\"card\",\"data\":{\"card_name\":\"Quick Links\",\"col\":4}},{\"id\":\"QgakR3m-Rd\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"My Samples\",\"col\":12}}]",
+ "creation": "2026-03-26 14:26:30.415746",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "chart",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Analysis & Reporting",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quick Links",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lab Register",
+   "link_count": 0,
+   "link_to": "Register",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Soil Test Result",
+   "link_count": 0,
+   "link_to": "Soil Test Result",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Government Order",
+   "link_count": 0,
+   "link_to": "Government Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Package of Practices",
+   "link_count": 0,
+   "link_to": "Package of Practice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-03-26 15:23:17.059765",
+ "modified_by": "Administrator",
+ "module": "Slis App",
+ "name": "Analysis & Reporting",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Register",
+   "label": "Lab Register",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "ToDo",
+   "label": "My Samples",
+   "quick_list_filter": "[[\"ToDo\",\"reference_type\",\"=\",\"Soil Sample Collection\",false]]"
+  }
+ ],
+ "roles": [
+  {
+   "role": "Research Assistant"
+  },
+  {
+   "role": "PSC Officer"
+  },
+  {
+   "role": "Senior Chemist"
+  },
+  {
+   "role": "Assistant Director"
+  },
+  {
+   "role": "Managing Director"
+  }
+ ],
+ "sequence_id": 41.0,
+ "shortcuts": [],
+ "title": "Analysis & Reporting"
+}

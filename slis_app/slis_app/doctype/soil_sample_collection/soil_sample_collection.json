@@ -8,6 +8,7 @@
  "field_order": [
   "client_details_section",
   "column_break_rntr",
+  "campaign_date",
   "client",
   "farmer_name",
   "name1",
@@ -25,9 +26,17 @@
   "column_break_nxzn",
   "consultancy_type",
   "status",
+  "department_details_section",
   "type_of_collection",
   "name_of_type",
-  "campaign_date",
+  "district_name",
+  "local_body",
+  "panchayath_name",
+  "block_name",
+  "number_of_samples",
+  "html",
+  "section_break_usar",
+  "sample_data",
   "sample_related_section",
   "state",
   "district",
@@ -53,40 +62,6 @@
   "irrigation_type",
   "catchment",
   "sub_watershed",
-  "nsmp_data_section",
-  "physiography",
-  "slope",
-  "degree",
-  "class",
-  "aspect",
-  "human_influence",
-  "moisture_condition_in_the_profile",
-  "infiltration_rate",
-  "base_map_details",
-  "a_toposheet_no",
-  "b_scale",
-  "c_base_map_sheet_no",
-  "column_break_mghm",
-  "erosion",
-  "pan",
-  "surface_condition",
-  "natvegetation",
-  "land_use",
-  "ground_water_level",
-  "soil_conservation_status",
-  "runoff_potential",
-  "photo_task",
-  "number",
-  "name_given",
-  "column_break_agwz",
-  "micro_relief",
-  "parent_material",
-  "bed_rock",
-  "climate_map",
-  "temperature_regime",
-  "moisture_regime",
-  "internal_drainage",
-  "saltalkali",
   "section_break_vuxt",
   "table_bdxv",
   "section_break_wsin",
@@ -104,21 +79,22 @@
   "column_break_pecc",
   "tests",
   "amount_payable",
-  "payment_details",
   "discount_percentage",
   "total_parameter_count",
   "dates_section",
   "assigned_to_lab_date",
   "assigned_to_ra__date",
-  "column_break_baez",
   "completed_date",
-  "return_to_sc_date",
   "return_to_psc_date",
+  "return_to_sc_date",
   "common_section",
   "date_of_collection",
   "lab_register_created",
   "allow_send_back_reason",
   "psc_entry_target_lab",
+  "lab_name",
+  "district_office_name",
+  "created_by",
   "ad_is_psc",
   "current_unit",
   "amended_from",
@@ -128,9 +104,6 @@
   "column_break_skhe",
   "employee_type",
   "send_back_reason",
-  "lab_name",
-  "district_office_name",
-  "created_by",
   "creator_user"
  ],
  "fields": [
@@ -159,8 +132,7 @@
    "fieldname": "date_of_collection",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Date Of Collection",
-   "reqd": 1
+   "label": "Date Of Collection"
   },
   {
    "default": "0",
@@ -295,11 +267,14 @@
    "options": "Panchayath"
   },
   {
+   "depends_on": "eval:doc.local_body_type==\"Panchayath\"",
    "fieldname": "village",
-   "fieldtype": "Data",
-   "label": "Village"
+   "fieldtype": "Link",
+   "label": "Village",
+   "options": "Village"
   },
   {
+   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "item_and_pricing_section",
    "fieldtype": "Section Break",
    "label": "Test Request and Pricing"
@@ -340,7 +315,7 @@
   {
    "fetch_from": "client.farmer_name",
    "fieldname": "farmer_name",
-   "fieldtype": "Data",
+   "fieldtype": "Text",
    "label": "Farmer Name",
    "read_only": 1
   },
@@ -420,6 +395,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "crops_list",
    "fieldtype": "Table",
    "label": "Crops",
@@ -480,6 +456,7 @@
    "options": "\nWell\nBore well\nCanal\nOthers"
   },
   {
+   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "section_break_wsin",
    "fieldtype": "Section Break"
   },
@@ -541,6 +518,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "sample_related_section",
    "fieldtype": "Section Break",
    "label": "Plot Related Data"
@@ -588,176 +566,6 @@
    "label": "Taluk"
   },
   {
-   "depends_on": "eval:doc.scheme_name == \"NSMP\"",
-   "fieldname": "nsmp_data_section",
-   "fieldtype": "Section Break",
-   "label": "NSMP Data"
-  },
-  {
-   "fieldname": "physiography",
-   "fieldtype": "Data",
-   "label": "Physiography"
-  },
-  {
-   "fieldname": "slope",
-   "fieldtype": "Data",
-   "label": "Slope"
-  },
-  {
-   "fieldname": "degree",
-   "fieldtype": "Data",
-   "label": "Degree"
-  },
-  {
-   "fieldname": "class",
-   "fieldtype": "Data",
-   "label": "Class"
-  },
-  {
-   "fieldname": "aspect",
-   "fieldtype": "Data",
-   "label": "Aspect"
-  },
-  {
-   "fieldname": "human_influence",
-   "fieldtype": "Data",
-   "label": "Human Influence"
-  },
-  {
-   "fieldname": "moisture_condition_in_the_profile",
-   "fieldtype": "Data",
-   "label": "Moisture condition in the Profile"
-  },
-  {
-   "fieldname": "infiltration_rate",
-   "fieldtype": "Data",
-   "label": "Infiltration Rate"
-  },
-  {
-   "fieldname": "base_map_details",
-   "fieldtype": "Data",
-   "label": "Base map Details"
-  },
-  {
-   "fieldname": "a_toposheet_no",
-   "fieldtype": "Data",
-   "label": "a. Toposheet No"
-  },
-  {
-   "fieldname": "b_scale",
-   "fieldtype": "Data",
-   "label": "b. Scale"
-  },
-  {
-   "fieldname": "c_base_map_sheet_no",
-   "fieldtype": "Data",
-   "label": "c. Base map Sheet No"
-  },
-  {
-   "fieldname": "column_break_mghm",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "erosion",
-   "fieldtype": "Data",
-   "label": "Erosion"
-  },
-  {
-   "fieldname": "pan",
-   "fieldtype": "Data",
-   "label": "Pan"
-  },
-  {
-   "fieldname": "surface_condition",
-   "fieldtype": "Data",
-   "label": "Surface condition"
-  },
-  {
-   "fieldname": "natvegetation",
-   "fieldtype": "Data",
-   "label": "Nat.Vegetation"
-  },
-  {
-   "fieldname": "land_use",
-   "fieldtype": "Data",
-   "label": "Land Use"
-  },
-  {
-   "fieldname": "ground_water_level",
-   "fieldtype": "Data",
-   "label": "Ground water level"
-  },
-  {
-   "fieldname": "soil_conservation_status",
-   "fieldtype": "Select",
-   "label": "Soil Conservation Status",
-   "options": "(1) Well bunded\n(2) Poorly bunded\n(3) Unbunded\n(4) Poorly Terrace\n(5) Bench Terrace"
-  },
-  {
-   "fieldname": "runoff_potential",
-   "fieldtype": "Data",
-   "label": "Runoff Potential"
-  },
-  {
-   "fieldname": "column_break_agwz",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "micro_relief",
-   "fieldtype": "Data",
-   "label": "Micro-relief"
-  },
-  {
-   "fieldname": "parent_material",
-   "fieldtype": "Data",
-   "label": "Parent material"
-  },
-  {
-   "fieldname": "bed_rock",
-   "fieldtype": "Data",
-   "label": "Bed Rock"
-  },
-  {
-   "fieldname": "climate_map",
-   "fieldtype": "Data",
-   "label": "Climate:MAP"
-  },
-  {
-   "fieldname": "temperature_regime",
-   "fieldtype": "Data",
-   "label": "Temperature Regime"
-  },
-  {
-   "fieldname": "moisture_regime",
-   "fieldtype": "Data",
-   "label": "Moisture Regime"
-  },
-  {
-   "fieldname": "internal_drainage",
-   "fieldtype": "Data",
-   "label": "Internal drainage"
-  },
-  {
-   "fieldname": "saltalkali",
-   "fieldtype": "Data",
-   "label": "Salt/Alkali"
-  },
-  {
-   "fieldname": "photo_task",
-   "fieldtype": "Data",
-   "label": "Photo Task"
-  },
-  {
-   "fieldname": "number",
-   "fieldtype": "Data",
-   "label": "Number"
-  },
-  {
-   "fieldname": "name_given",
-   "fieldtype": "Data",
-   "label": "Name Given"
-  },
-  {
    "depends_on": "eval: doc.client_type != \"Department\"",
    "fieldname": "amount_payable",
    "fieldtype": "Data",
@@ -797,10 +605,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_baez",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "completed_date",
    "fieldtype": "Date",
    "label": "Completed Date",
@@ -825,13 +629,6 @@
    "label": "Creator User"
   },
   {
-   "depends_on": "eval: doc.client_type != \"Department\"",
-   "fieldname": "payment_details",
-   "fieldtype": "Int",
-   "label": "Payment Details",
-   "mandatory_depends_on": "eval: doc.client_type != \"Department\""
-  },
-  {
    "fieldname": "assigned_to_ra__date",
    "fieldtype": "Date",
    "label": "Assigned to RA  Date",
@@ -847,6 +644,7 @@
   {
    "fieldname": "total_parameter_count",
    "fieldtype": "Int",
+   "hidden": 1,
    "label": "Total Parameter Count"
   },
   {
@@ -854,20 +652,74 @@
    "fieldtype": "Column Break"
   },
   {
+   "fieldname": "column_break_qoci",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "name_of_type",
-   "fieldtype": "Small Text",
+   "fieldtype": "Data",
    "label": "Name of Type",
    "read_only": 1
   },
   {
-   "fieldname": "column_break_qoci",
-   "fieldtype": "Column Break"
+   "fieldname": "department_details_section",
+   "fieldtype": "Section Break",
+   "label": "Department Details"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "district_name",
+   "fieldtype": "Link",
+   "label": "District Name",
+   "options": "District"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "local_body",
+   "fieldtype": "Select",
+   "label": "Local Body",
+   "options": "\nBlock\nPanchayath"
+  },
+  {
+   "depends_on": "eval:doc.local_body==\"Panchayath\"",
+   "fieldname": "panchayath_name",
+   "fieldtype": "Link",
+   "label": "Panchayath",
+   "options": "Panchayath"
+  },
+  {
+   "depends_on": "eval:doc.local_body==\"Block\"",
+   "fieldname": "block_name",
+   "fieldtype": "Small Text",
+   "label": "Block"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "number_of_samples",
+   "fieldtype": "Int",
+   "label": "Number of Samples"
+  },
+  {
+   "fieldname": "html",
+   "fieldtype": "HTML",
+   "label": "HTML"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "section_break_usar",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "sample_data",
+   "fieldtype": "Table",
+   "label": "Sample Data",
+   "options": "Sample Data"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-19 12:18:20.883839",
+ "modified": "2026-04-13 17:43:22.788912",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

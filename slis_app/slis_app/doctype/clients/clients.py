@@ -151,18 +151,29 @@ def get_permission_query_conditions(user):
     if not user:
         user = frappe.session.user
 
-    # Allow Administrator full access
+    # Full access for Administrator
     if user == "Administrator":
         return ""
 
-    lab = frappe.db.get_value(
+    employee = frappe.db.get_value(
         "Employee",
         {"user_id": user},
-        "custom_lab_name"
+        ["employment_type", "custom_lab_name", "custom_district_office_name"],
+        as_dict=True
     )
 
-    if lab:
-        return f"`tabClients`.`login_lab_name` = '{lab}'"
+    if not employee:
+        return "1=0"
+
+    # District Office user
+    if employee.employment_type == "District Office" and employee.custom_district_office_name:
+        dept = frappe.db.escape(employee.custom_district_office_name)
+        return f"`tabClients`.`custom_collection_department` = {dept}"
+
+    # Lab user
+    if employee.employment_type == "Lab" and employee.custom_lab_name:
+        lab = frappe.db.escape(employee.custom_lab_name)
+        return f"`tabClients`.`login_lab_name` = {lab}"
 
     return "1=0"
 
@@ -171,20 +182,34 @@ def has_permission(doc, user=None):
     if not user:
         user = frappe.session.user
 
-    # Allow Administrator full access
+    # Admin full access
     if user == "Administrator":
         return True
 
-    lab = frappe.db.get_value(
+    # ✅ Allow creation safely
+    if doc.is_new():
+        return True
+
+    employee = frappe.db.get_value(
         "Employee",
         {"user_id": user},
-        "custom_lab_name"
+        ["employment_type", "custom_lab_name", "custom_district_office_name"],
+        as_dict=True
     )
 
-    if not lab:
+    if not employee:
         return False
 
-    if doc.login_lab_name != lab:
-        return False
+    # District Office user
+    if employee.employment_type == "District Office":
+        if not employee.custom_district_office_name:
+            return False
+        return doc.custom_collection_department == employee.custom_district_office_name
 
-    return True
+    # Lab user
+    if employee.employment_type == "Lab":
+        if not employee.custom_lab_name:
+            return False
+        return doc.login_lab_name == employee.custom_lab_name
+
+    return False

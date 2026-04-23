@@ -1,0 +1,198 @@
+{
+ "charts": [
+  {
+   "chart_name": "Category wise Asset",
+   "label": "Category wise Asset"
+  }
+ ],
+ "content": "[{\"id\":\"zkk8FDLVt7\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Assets\",\"col\":4}},{\"id\":\"ANsfYBJ1pn\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"New Assets\",\"col\":4}},{\"id\":\"JmDUazjkNq\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Stock Value\",\"col\":4}},{\"id\":\"iMg8N1y_9q\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Category wise Asset\",\"col\":6}},{\"id\":\"Asg3o92fL_\",\"type\":\"card\",\"data\":{\"card_name\":\"Asset Management\",\"col\":6}},{\"id\":\"Jt608-TJ2A\",\"type\":\"card\",\"data\":{\"card_name\":\"Stock Management\",\"col\":6}},{\"id\":\"L39RGZD__N\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Purchase Indent\",\"col\":6}}]",
+ "creation": "2026-03-26 15:25:28.125110",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "stock",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Assets & Stock",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Asset Management",
+   "link_count": 6,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Register",
+   "link_count": 0,
+   "link_to": "Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Asset Category",
+   "link_count": 0,
+   "link_to": "Asset Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Asset Register",
+   "link_count": 0,
+   "link_to": "Asset",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Asset Movement",
+   "link_count": 0,
+   "link_to": "Asset Movement",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Asset Maintenance Register",
+   "link_count": 0,
+   "link_to": "Asset Maintenance",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Asset Repair",
+   "link_count": 0,
+   "link_to": "Asset Repair",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Management",
+   "link_count": 5,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Entry Register",
+   "link_count": 0,
+   "link_to": "Stock Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Group Register",
+   "link_count": 0,
+   "link_to": "Item Group",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase ReceiptPurchase Register",
+   "link_count": 0,
+   "link_to": "Purchase Receipt",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Broken Item Register",
+   "link_count": 0,
+   "link_to": "Broken Item Register",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Indent",
+   "link_count": 0,
+   "link_to": "Purchase Indent",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-03-26 16:31:39.287464",
+ "modified_by": "Administrator",
+ "module": "Slis App",
+ "name": "Assets & Stock",
+ "number_cards": [
+  {
+   "label": "Total Assets",
+   "number_card_name": "Total Assets"
+  },
+  {
+   "label": "Total Stock Value",
+   "number_card_name": "Total Stock Value"
+  },
+  {
+   "label": "New Assets",
+   "number_card_name": "New Assets (This Year)"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Purchase Indent",
+   "label": "Purchase Indent",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [
+  {
+   "role": "Research Assistant"
+  },
+  {
+   "role": "PSC Officer"
+  },
+  {
+   "role": "Senior Chemist"
+  },
+  {
+   "role": "Assistant Director"
+  },
+  {
+   "role": "Managing Director"
+  }
+ ],
+ "sequence_id": 42.0,
+ "shortcuts": [],
+ "title": "Assets & Stock"
+}

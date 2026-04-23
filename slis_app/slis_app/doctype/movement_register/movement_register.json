@@ -68,9 +68,10 @@
   }
  ],
  "grid_page_length": 50,
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-19 13:50:20.048721",
+ "modified": "2026-04-13 16:29:20.115350",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Movement Register",

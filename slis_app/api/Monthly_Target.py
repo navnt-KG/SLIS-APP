@@ -36,7 +36,6 @@ def calculate_target(docname):
     existing_months = [row.month for row in doc.lab_target if row.month]
 
     if not existing_months:
-
         doc.append("lab_target", {
             "month": current_month,
             "lab_name": lab
@@ -51,7 +50,6 @@ def calculate_target(docname):
             continue
 
         month = list(calendar.month_name).index(row.month)
-
         days_in_month = calendar.monthrange(year, month)[1]
 
         lab_name = row.lab_name or lab
@@ -63,7 +61,8 @@ def calculate_target(docname):
             "Employee",
             filters={"custom_lab_name": lab_name},
             fields=[
-                "designation",
+                "name",
+                "user_id",
                 "date_of_joining",
                 "custom_date_of_transfer",
                 "custom_date_of_resign"
@@ -75,7 +74,19 @@ def calculate_target(docname):
 
         for emp in employees:
 
-            if emp.designation != "Research Assistant":
+            # ✅ CHECK ROLE INSTEAD OF DESIGNATION
+            if not emp.user_id:
+                continue
+
+            has_role = frappe.db.exists(
+                "Has Role",
+                {
+                    "parent": emp.user_id,
+                    "role": "Research Assistant"
+                }
+            )
+
+            if not has_role:
                 continue
 
             target = per_ra

@@ -1,0 +1,144 @@
+{
+ "charts": [
+  {
+   "chart_name": "Lab Sample Status",
+   "label": "Sample Status"
+  }
+ ],
+ "content": "[{\"id\":\"t-J03cLKVa\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"financial year\",\"col\":3}},{\"id\":\"ssWjK7pAiP\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Samples This Month\",\"col\":3}},{\"id\":\"LKvRnr_zHK\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Samples Pending This Month\",\"col\":3}},{\"id\":\"srEXKuyn4r\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Testing Completed\",\"col\":3}},{\"id\":\"dZCW1am7WG\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Sample Status\",\"col\":12}},{\"id\":\"QzROP6wImB\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Recent Sample List\",\"col\":9}},{\"id\":\"dREKa5niB0\",\"type\":\"card\",\"data\":{\"card_name\":\"Quick Actions\",\"col\":3}},{\"id\":\"8f6YrPEzqj\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Recent Activities\",\"col\":12}},{\"id\":\"ZoksPrcaQR\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Lab Wise Sample Status\",\"col\":12}}]",
+ "creation": "2026-03-25 16:52:54.964766",
+ "custom_blocks": [
+  {
+   "custom_block_name": "Lab Wise Sample Status",
+   "label": "Lab Wise Sample Status"
+  },
+  {
+   "custom_block_name": "financial year",
+   "label": "financial year"
+  }
+ ],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "agriculture",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Soil Intake",
+ "links": [
+  {
+   "description": "Click on the items below to go the lis items where you can view and create them.",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quick Actions",
+   "link_count": 5,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Client Register",
+   "link_count": 0,
+   "link_to": "Clients",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sample Intake form",
+   "link_count": 0,
+   "link_to": "Soil Sample Collection",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lab Register",
+   "link_count": 0,
+   "link_to": "Register",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sample Collection Programs",
+   "link_count": 0,
+   "link_to": "Name Of Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Relevant GOs",
+   "link_count": 0,
+   "link_to": "Government Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-04-15 22:23:55.125769",
+ "modified_by": "Administrator",
+ "module": "Slis App",
+ "name": "Soil Intake",
+ "number_cards": [
+  {
+   "label": "Total Samples This Month",
+   "number_card_name": "Samples This Month"
+  },
+  {
+   "label": "Samples Pending This Month",
+   "number_card_name": "Samples Pending"
+  },
+  {
+   "label": "Testing Completed",
+   "number_card_name": "Testing Completed"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Soil Sample Collection",
+   "label": "Recent Sample List",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "ToDo",
+   "label": "Recent Activities",
+   "quick_list_filter": "[[\"ToDo\",\"reference_type\",\"=\",\"Soil Sample Collection\",false]]"
+  }
+ ],
+ "roles": [
+  {
+   "role": "Research Assistant"
+  },
+  {
+   "role": "PSC Officer"
+  },
+  {
+   "role": "Senior Chemist"
+  },
+  {
+   "role": "Managing Director"
+  },
+  {
+   "role": "Assistant Director"
+  }
+ ],
+ "sequence_id": 40.0,
+ "shortcuts": [],
+ "title": "Soil Intake"
+}

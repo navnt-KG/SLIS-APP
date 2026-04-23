@@ -93,29 +93,36 @@
 //     }
 // };
 
-frappe.listview_settings['Soil Sample Collection'] = {
-    refresh(listview) {
 
-        listview.page.clear_primary_action();
 
-        listview.page.set_primary_action(__('Add Soil Sample'), () => {
-            frappe.new_doc('Clients');
-        });
 
-        // ✅ Always add button (Frappe handles duplicates internally)
-        listview.page.add_inner_button(__('Add to Register'), () => {
 
-            const selected_items = listview.get_checked_items();
 
-            if (!selected_items.length) {
-                frappe.msgprint(__('Please select at least one sample to register.'));
-                return;
-            }
 
-            selected_items.forEach(doc => {
-                create_register_from_list(doc);
-            });
 
-        }, __('Actions'));  // 👈 VERY IMPORTANT (puts inside Actions dropdown)
-    }
-};
+// frappe.listview_settings['Soil Sample Collection'] = {
+//     refresh(listview) {
+
+//         listview.page.clear_primary_action();
+
+//         listview.page.set_primary_action(__('Add Soil Sample'), () => {
+//             frappe.new_doc('Clients');
+//         });
+
+//         // ✅ Always add button (Frappe handles duplicates internally)
+//         listview.page.add_inner_button(__('Add to Register'), () => {
+
+//             const selected_items = listview.get_checked_items();
+
+//             if (!selected_items.length) {
+//                 frappe.msgprint(__('Please select at least one sample to register.'));
+//                 return;
+//             }
+
+//             selected_items.forEach(doc => {
+//                 create_register_from_list(doc);
+//             });
+
+//         }, __('Actions'));  // 👈 VERY IMPORTANT (puts inside Actions dropdown)
+//     }
+// };

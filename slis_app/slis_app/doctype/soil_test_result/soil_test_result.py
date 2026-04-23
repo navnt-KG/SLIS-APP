@@ -122,24 +122,21 @@ def generate_recommendation(docname):
     # -----------------------------------
 
     for row in doc.results_table:
-
-        if row.test_item == "Organic Carbon":
+        if row.test_item and "Organic Carbon" in row.test_item:
             organic_carbon = float(row.final_result)
-
-        elif row.test_item == "Available Phosphorous":
+        elif row.test_item and "Available Phosphorous" in row.test_item:
             available_p = float(row.final_result)
-
-        elif row.test_item == "Available Potassium":
+        elif row.test_item and "Available Potassium" in row.test_item:
             available_k = float(row.final_result)
 
 
-#     frappe.msgprint(f"""
-# STEP 1 - TEST VALUES
+    frappe.msgprint(f"""
+STEP 1 - TEST VALUES
 
-# Organic Carbon: {organic_carbon}
-# Available P: {available_p}
-# Available K: {available_k}
-# """)
+Organic Carbon: {organic_carbon}
+Available P: {available_p}
+Available K: {available_k}
+""")
 
 
     # -----------------------------------
@@ -162,16 +159,16 @@ def generate_recommendation(docname):
         k_min = float(adj.avail_k_min or 0)
         k_max = float(adj.avail_k_max or 0)
 
-#         frappe.msgprint(f"""
-# CHECKING FERTILITY ROW
+        frappe.msgprint(f"""
+CHECKING FERTILITY ROW
 
-# OC Range: {oc_min} - {oc_max}
-# P Range: {p_min} - {p_max}
-# K Range: {k_min} - {k_max}
+OC Range: {oc_min} - {oc_max}
+P Range: {p_min} - {p_max}
+K Range: {k_min} - {k_max}
 
-# N Adj: {adj.n_adjustment}
-# PK Adj: {adj.p_and_k_adjustment}
-# """)
+N Adj: {adj.n_adjustment}
+PK Adj: {adj.p_and_k_adjustment}
+""")
 
 
         if organic_carbon is not None:
@@ -192,12 +189,12 @@ def generate_recommendation(docname):
                 # frappe.msgprint(f"K MATCH FOUND → PK Adjustment = {pk_adjust}")
 
 
-#     frappe.msgprint(f"""
-# STEP 2 RESULT
+    frappe.msgprint(f"""
+STEP 2 RESULT
 
-# N Adjustment = {n_adjust}
-# PK Adjustment = {pk_adjust}
-# """)
+N Adjustment = {n_adjust}
+PK Adjustment = {pk_adjust}
+""")
 
 
     # -----------------------------------
@@ -235,45 +232,59 @@ def generate_recommendation(docname):
 
         pop = frappe.get_doc("Package of Practice", pop_name)
 
-        # frappe.msgprint(f"PoP Found → {pop_name}")
+        frappe.msgprint(f"PoP Found → {pop_name}")
 
 
         n_required = 0
         p_required = 0
         k_required = 0
+        n_unit = '' 
+        p_unit = ''  
+        k_unit = '' 
 
 
         # -----------------------------------
         #  Read PoP Nutrient Values
         # -----------------------------------
 
+ 
         for nutrient in pop.nutrient_data:
-
-#             frappe.msgprint(f"""
-# PoP Nutrient Row
-
-# Nutrient: {nutrient.nutrient}
-# Quantity: {nutrient.quantity}
-# """)
-
-
-            if nutrient.nutrient == "Available Nitrogen" and organic_carbon is not None:
+            if nutrient.nutrient and "Available Nitrogen" in nutrient.nutrient and organic_carbon is not None:
                 n_required = float(nutrient.quantity) * n_adjust / 100
-
-            elif nutrient.nutrient == "Available Phosphorous" and available_p is not None:
+                n_unit = nutrient.unit or ''  # ADD THIS
+            elif nutrient.nutrient and "Available Phosphorous" in nutrient.nutrient and available_p is not None:
                 p_required = float(nutrient.quantity) * pk_adjust / 100
-
-            elif nutrient.nutrient == "Available Potassium" and available_k is not None:
+                p_unit = nutrient.unit or ''  # ADD THIS
+            elif nutrient.nutrient and "Available Potassium" in nutrient.nutrient and available_k is not None:
                 k_required = float(nutrient.quantity) * pk_adjust / 100
+                k_unit = nutrient.unit or ''  # ADD THIS
 
 
-#         frappe.msgprint(f"""
-# STEP 3 - NUTRIENT REQUIREMENT
+            frappe.msgprint(f"""
+PoP Nutrient Row
 
-# N Required: {n_required}
-# P Required: {p_required}
-# K Required: {k_required}
-# """)
+Nutrient: {nutrient.nutrient}
+Quantity: {nutrient.quantity}
+""")
+
+
+            # if nutrient.nutrient == "Available Nitrogen" and organic_carbon is not None:
+            #     n_required = float(nutrient.quantity) * n_adjust / 100
+
+            # elif nutrient.nutrient == "Available Phosphorous" and available_p is not None:
+            #     p_required = float(nutrient.quantity) * pk_adjust / 100
+
+            # elif nutrient.nutrient == "Available Potassium" and available_k is not None:
+            #     k_required = float(nutrient.quantity) * pk_adjust / 100
+
+
+        frappe.msgprint(f"""
+STEP 3 - NUTRIENT REQUIREMENT
+
+N Required: {n_required}
+P Required: {p_required}
+K Required: {k_required}
+""")
 
 
         # -----------------------------------
@@ -286,31 +297,31 @@ def generate_recommendation(docname):
 
 
         fert_n_name = frappe.db.get_value(
-            "Fertilizer",
-            {"primary_nutrient": "Available Nitrogen"},
-            "name"
+        "Fertilizer",
+        {"primary_nutrient": ["like", "%Available Nitrogen%"]},
+        "name"
         )
 
         fert_p_name = frappe.db.get_value(
             "Fertilizer",
-            {"primary_nutrient": "Available Phosphorous"},
+            {"primary_nutrient": ["like", "%Available Phosphorous%"]},
             "name"
         )
 
         fert_k_name = frappe.db.get_value(
             "Fertilizer",
-            {"primary_nutrient": "Available Potassium"},
+            {"primary_nutrient": ["like", "%Available Potassium%"]},
             "name"
         )
 
 
-#         frappe.msgprint(f"""
-# FERTILIZER LOOKUP
+        frappe.msgprint(f"""
+FERTILIZER LOOKUP
 
-# N Fertilizer: {fert_n_name}
-# P Fertilizer: {fert_p_name}
-# K Fertilizer: {fert_k_name}
-# """)
+N Fertilizer: {fert_n_name}
+P Fertilizer: {fert_p_name}
+K Fertilizer: {fert_k_name}
+""")
 
 
         if fert_n_name:
@@ -342,13 +353,13 @@ def generate_recommendation(docname):
             potash = (k_required / float(fert_k.nutrient_percentage)) * 100
 
 
-#         frappe.msgprint(f"""
-# FINAL FERTILIZER CALCULATION
+        frappe.msgprint(f"""
+FINAL FERTILIZER CALCULATION
 
-# Urea: {urea}
-# Rajphos: {rajphos}
-# Potash: {potash}
-# """)
+Urea: {urea}
+Rajphos: {rajphos}
+Potash: {potash}
+""")
 
 
         # -----------------------------------
@@ -361,6 +372,8 @@ def generate_recommendation(docname):
         row.urea = round(urea, 2)
         row.rajphos = round(rajphos, 2)
         row.potash = round(potash, 2)
+        row.unit = n_unit
+
 
 
     # -----------------------------------

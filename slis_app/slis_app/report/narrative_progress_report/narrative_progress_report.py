@@ -1,374 +1,235 @@
 import frappe
 import calendar
-
+from datetime import date
 
 # ======================================================
-# REPORT ENTRY
+# MAIN
 # ======================================================
-
 def execute(filters=None):
 
     filters = filters or {}
 
-    # SESSION 1 DATA
-    session1_columns = get_columns()
-    session1_data = get_data(filters)
-
-    # PROJECTS
-    projects = frappe.db.sql("""
-        SELECT DISTINCT project_name
-        FROM `tabSoil Sample Collection`
-        WHERE project_name IS NOT NULL AND project_name!=''
-    """, as_dict=True)
-
-    # SCHEMES
-    schemes = frappe.db.sql("""
-        SELECT DISTINCT scheme_name
-        FROM `tabSoil Sample Collection`
-        WHERE scheme_name IS NOT NULL AND scheme_name!=''
-    """, as_dict=True)
-
-    # SESSION 2
-    session2_columns = get_session_two_columns(projects, schemes)
-    session2_data = get_session_two_data(filters, projects, schemes)
-
-    html = ""
-    html += """
-    <style>
-    .scroll-container{
-        overflow-x:auto;
-        width:100%;
-        border:1px solid #ddd;
-        margin-bottom:20px;
-    }
-
-    .scroll-container::-webkit-scrollbar{
-        height:10px;
-    }
-
-    .scroll-container::-webkit-scrollbar-track{
-        background:#f1f1f1;
-    }
-
-    .scroll-container::-webkit-scrollbar-thumb{
-        background:#4B8DF8;
-        border-radius:5px;
-    }
-
-    .scroll-container::-webkit-scrollbar-thumb:hover{
-        background:#2f6de0;
-    }
-
-    .table{
-        white-space:nowrap;
-    }
-    </style>
-    """
-
-    # ======================================================
-    # TABLE 1 : NARRATIVE PROGRESS REPORT
-    # ======================================================
-
-    html += "<h3>Narrative Progress Report</h3>"
-    html += "<div class='scroll-container'><table class='table table-bordered'>"
-
-    html += "<thead><tr>"
-    for col in session1_columns:
-        html += f"<th>{col['label']}</th>"
-    html += "</tr></thead><tbody>"
-
-    for row in session1_data:
-        html += "<tr>"
-        for col in session1_columns:
-            val = row.get(col["fieldname"], "")
-            html += f"<td>{val}</td>"
-        html += "</tr>"
-
-    html += "</tbody></table></div>"
-
-
-    # ======================================================
-    # TABLE 2 : CONSOLIDATED PENDING WORK
-    # ======================================================
-
-    html += "<br><h3>Consolidated Pending Work</h3>"
-    html += "<div class='scroll-container'><table class='table table-bordered'>"
-
-    html += "<thead><tr>"
-    html += "<th>Laboratory</th>"
-
-    for col in session2_columns:
-        html += f"<th>{col['label']}</th>"
-
-    html += "</tr></thead><tbody>"
-
-    for row in session2_data:
-
-        html += "<tr>"
-
-        html += f"<td>{row.get('lab_name','')}</td>"
-
-        for col in session2_columns:
-
-            val = row.get(col["fieldname"], 0)
-
-            html += f"<td>{val}</td>"
-
-        html += "</tr>"
-
-    html += "</tbody></table></div>"
-
-
-    # ======================================================
-    # MESSAGE
-    # ======================================================
-
     month = int(filters.get("month"))
     year = int(filters.get("year"))
 
     month_name = calendar.month_name[month]
-
     financial_year, fy_start, fy_end = get_financial_year_range(month, year)
 
-    message = f"Samples Analysed in the Month of {month_name} {financial_year}<br><br>{html}"
+    today = date.today()
+
+    if date(year, month, 1) > today:
+        return [], [], f"<h3>No data for {month_name} {year} (Future Month)</h3>"
+
+    session1_columns = get_columns()
+    session1_data = get_data(filters, month, year, financial_year, fy_start)
+
+    user = frappe.session.user
+    ra = is_ra(user)
+
+    session2_raw = get_session_two_data(ra=ra, user=user)
+    session2_columns = get_session_two_columns(session2_raw, ra=ra)
+    session2_data = session2_raw["rows"]
+
+    html = build_html(session1_columns, session1_data,
+                      session2_columns, session2_data, ra=ra)
+
+    message = f"Samples Analysed in {month_name} {financial_year}<br><br>{html}"
 
     return [], [], message
 
 
-def get_dm(lab, month, year):
+# ======================================================
+# RA CHECK
+# ======================================================
+def is_ra(user):
 
-    result = frappe.db.sql("""
+    emp_name = frappe.db.get_value(
+        "Employee",
+        {"user_id": user},
+        "employee_name"
+    )
 
-        SELECT COUNT(name)
+    if not emp_name:
+        return False
 
-        FROM `tabSoil Sample Collection`
+    return frappe.db.exists("ToDo", {
+        "allocated_to": user,
+        "custom_ra_employee_name": emp_name
+    })
 
-        WHERE
-        status='completed'
-        AND MONTH(completed_date)=%s
-        AND YEAR(completed_date)=%s
 
-        AND (
-            (client_type='Department' AND target_lab=%s)
-            OR
-            (client_type IN ('Farmer','Consultancy') AND lab_name=%s)
+# ======================================================
+# LAB LIST
+# ======================================================
+def get_labs(user):
+
+    roles = frappe.get_roles(user)
+
+    if user == "Administrator" or "System Manager" in roles:
+        return frappe.get_all("Soil Laboratory", pluck="name")
+
+    if "Senior Chemist" in roles:
+        lab = frappe.db.get_value(
+            "Employee",
+            {"user_id": user},
+            "custom_lab_name"
         )
+        return [lab] if lab else []
 
-    """, (month, year, lab, lab))
-
-    return result[0][0] if result else 0
-def get_pt(lab, fy_start, month_end):
-
-    result = frappe.db.sql("""
-
-        SELECT COUNT(name)
-
-        FROM `tabSoil Sample Collection`
-
-        WHERE
-        status='completed'
-        AND completed_date BETWEEN %s AND %s
-
-        AND (
-            (client_type='Department' AND target_lab=%s)
-            OR
-            (client_type IN ('Farmer','Consultancy') AND lab_name=%s)
-        )
-
-    """, (fy_start, month_end, lab, lab))
-
-    return result[0][0] if result else 0
-
-def get_pending(lab, fy_start, month_end):
-
-    assigned = frappe.db.sql("""
-
-        SELECT COUNT(name)
-
-        FROM `tabSoil Sample Collection`
-
-        WHERE
-        (
-            (client_type='Department' AND target_lab=%s)
-            OR
-            (client_type IN ('Farmer','Consultancy') AND lab_name=%s)
-        )
-
-        AND creation BETWEEN %s AND %s
-
-    """, (lab, lab, fy_start, month_end))[0][0] or 0
+    return frappe.get_all("Soil Laboratory", pluck="name")
 
 
-    completed = frappe.db.sql("""
+# ======================================================
+# LAB MAPPING
+# ======================================================
+def get_sample_lab(s):
+    return s.target_lab if s.client_type == "Department" else s.lab_name
 
-        SELECT COUNT(name)
-
-        FROM `tabSoil Sample Collection`
-
-        WHERE
-        (
-            (client_type='Department' AND target_lab=%s)
-            OR
-            (client_type IN ('Farmer','Consultancy') AND lab_name=%s)
-        )
-
-        AND status='completed'
-        AND completed_date BETWEEN %s AND %s
-
-    """, (lab, lab, fy_start, month_end))[0][0] or 0
-
-
-    return assigned - completed
 
 # ======================================================
 # FINANCIAL YEAR
 # ======================================================
-
 def get_financial_year_range(month, year):
 
     if month >= 4:
-
-        fy_start = f"{year}-04-01"
-        fy_end = f"{year+1}-03-31"
-        financial_year = f"{year}-{year+1}"
-
+        return f"{year}-{year+1}", date(year, 4, 1), date(year+1, 3, 31)
     else:
+        return f"{year-1}-{year}", date(year-1, 4, 1), date(year, 3, 31)
 
-        fy_start = f"{year-1}-04-01"
-        fy_end = f"{year}-03-31"
-        financial_year = f"{year-1}-{year}"
-
-    return financial_year, fy_start, fy_end
-
-
-# ======================================================
-# MONTH END
-# ======================================================
 
 def get_month_end_date(month, year):
-
-    last_day = calendar.monthrange(year, month)[1]
-
-    return f"{year}-{month:02d}-{last_day}"
+    return date(year, month, calendar.monthrange(year, month)[1])
 
 
 # ======================================================
-# SESSION 1 COLUMNS
+# SESSION 1
 # ======================================================
-
 def get_columns():
-
     return [
-
-        {"label": "Laboratory Name", "fieldname": "lab_name", "fieldtype": "Data", "width": 220},
-
-        {"label": "Profile Target", "fieldname": "profile_target", "fieldtype": "Int", "width": 130},
-
-        {"label": "Other Target", "fieldname": "other_target", "fieldtype": "Int", "width": 130},
-
-        {"label": "Total Target", "fieldname": "target", "fieldtype": "Int", "width": 120},
-
-        {"label": "DM (During Month)", "fieldname": "dm", "fieldtype": "Int", "width": 160},
-
-        {"label": "PT (Progressive Total)", "fieldname": "pt", "fieldtype": "Int", "width": 170},
-
-        {"label": "Pending", "fieldname": "pending", "fieldtype": "Int", "width": 140}
-
+        {"label": "Name", "fieldname": "name"},
+        {"label": "Profile Target", "fieldname": "profile_target"},
+        {"label": "Other Target", "fieldname": "other_target"},
+        {"label": "Total Target", "fieldname": "target"},
+        {"label": "DM", "fieldname": "dm"},
+        {"label": "PT", "fieldname": "pt"},
+        {"label": "Pending", "fieldname": "pending"},
     ]
 
 
-# ======================================================
-# LAB ACCESS
-# ======================================================
-
-def get_labs():
+def get_data(filters, month, year, financial_year, fy_start):
 
     user = frappe.session.user
-    roles = frappe.get_roles(user)
+    month_start = date(year, month, 1)
+    month_end = get_month_end_date(month, year)
 
-    if "Senior Chemist" in roles:
+    if is_ra(user):
 
         emp = frappe.db.get_value(
             "Employee",
             {"user_id": user},
-            ["custom_lab_name"],
+            ["employee_name"],
             as_dict=True
         )
 
-        if emp and emp.custom_lab_name:
-            return [emp.custom_lab_name]
+        target = frappe.db.get_value(
+            "Monthly Target",
+            {"financial_year": financial_year},
+            ["profile_sample_count", "other_sample_count"],
+            as_dict=True
+        )
 
-        return []
+        profile = target.profile_sample_count if target else 0
+        other = target.other_sample_count if target else 0
 
-    elif "PSC Officer" in roles or "Administrator" in roles or "Managing Director" in roles:
+        samples = frappe.db.sql("""
+            SELECT s.status, s.completed_date
+            FROM `tabSoil Sample Collection` s
+            INNER JOIN `tabToDo` t ON t.reference_name = s.name
+            WHERE t.allocated_to=%s
+        """, user, as_dict=True)
 
-        return frappe.get_all("Soil Laboratory", pluck="name")
+        dm = pt = pending = 0
 
-    return []
+        for s in samples:
 
+            if s.status == "completed" and s.completed_date:
 
-# ======================================================
-# TARGET
-# ======================================================
+                if month_start <= s.completed_date <= month_end:
+                    dm += 1
 
-def get_target(lab, month, financial_year):
+                if fy_start <= s.completed_date <= month_end:
+                    pt += 1
 
-    r = frappe.db.sql("""
-        SELECT
-        SUM(mt.profile_sample_count * lt.ra_count) AS profile_target,
-        SUM(mt.other_sample_count * lt.ra_count) AS other_target
-        FROM `tabMonthly Target` mt
-        INNER JOIN `tabLab Target` lt ON lt.parent = mt.name
-        WHERE lt.lab_name=%s AND lt.month=%s AND mt.financial_year=%s
-    """,(lab,month,financial_year),as_dict=True)
+            elif s.status == "With Research Assistant":
+                pending += 1
 
-    if r:
-        p = r[0]["profile_target"] or 0
-        o = r[0]["other_target"] or 0
-        return {"profile":p,"other":o,"total":p+o}
+        return [{
+            "name": emp.employee_name if emp else user,
+            "profile_target": profile,
+            "other_target": other,
+            "target": profile + other,
+            "dm": dm,
+            "pt": pt,
+            "pending": pending
+        }]
 
-    return {"profile":0,"other":0,"total":0}
+    labs = get_labs(user)
 
+    samples = frappe.get_all(
+        "Soil Sample Collection",
+        fields=["lab_name", "target_lab", "client_type",
+                "status", "completed_date"]
+    )
 
-# ======================================================
-# SESSION 1 DATA
-# ======================================================
-
-def get_data(filters):
-
-    month = int(filters.get("month"))
-    year = int(filters.get("year"))
-
-    month_name = calendar.month_name[month]
-
-    financial_year, fy_start, fy_end = get_financial_year_range(month, year)
-
-    month_end = get_month_end_date(month, year)
-
-    labs = get_labs()
-
-    data=[]
+    data = []
 
     for lab in labs:
 
-        t = get_target(lab,month_name,financial_year)
+        dm = pt = pending = 0
 
-        dm = get_dm(lab, month, year)
+        for s in samples:
 
-        pt = get_pt(lab, fy_start, month_end)
+            sample_lab = get_sample_lab(s)
 
-        pending = get_pending(lab, fy_start, month_end)
+            if sample_lab != lab:
+                continue
+
+            if s.status == "completed" and s.completed_date:
+
+                if month_start <= s.completed_date <= month_end:
+                    dm += 1
+
+                if fy_start <= s.completed_date <= month_end:
+                    pt += 1
+
+            elif s.status in (
+                "With Senior Chemist",
+                "With Research Assistant",
+                "Returned to Senior Chemist(Overload)"
+            ):
+                pending += 1
+
+        target = frappe.db.sql("""
+            SELECT 
+                SUM(mt.profile_sample_count * lt.ra_count) as profile,
+                SUM(mt.other_sample_count * lt.ra_count) as other
+            FROM `tabMonthly Target` mt
+            INNER JOIN `tabLab Target` lt ON lt.parent = mt.name
+            WHERE lt.lab_name=%s
+            AND mt.financial_year=%s
+        """, (lab, financial_year), as_dict=True)
+
+        profile = target[0]["profile"] or 0
+        other = target[0]["other"] or 0
 
         data.append({
-
-            "lab_name":lab,
-            "profile_target":t["profile"],
-            "other_target":t["other"],
-            "target":t["total"],
-            "dm":dm,
-            "pt":pt,
-            "pending":pending
-
+            "name": lab,
+            "profile_target": profile,
+            "other_target": other,
+            "target": profile + other,
+            "dm": dm,
+            "pt": pt,
+            "pending": pending
         })
 
     return data
@@ -377,154 +238,311 @@ def get_data(filters):
 # ======================================================
 # SESSION 2 COLUMNS
 # ======================================================
+def get_session_two_columns(data, ra=False):
 
-def get_session_two_columns(projects, schemes):
+    # First column label: "Name" for RA, "Lab" for others
+    first_col_label = "Name" if ra else "Lab"
 
-    cols = [
+    cols = [{"label": first_col_label, "fieldname": "lab_name"}]
 
-        {"label": "Farmer", "fieldname": "farmer", "fieldtype": "Int", "width": 120},
+    for c in data["clients"]:
+        cols.append({"label": c, "fieldname": c})
 
-        {"label": "Consultancy", "fieldname": "consultancy", "fieldtype": "Int", "width": 120},
-
-        {"label": "Campaign", "fieldname": "campaign", "fieldtype": "Int", "width": 120},
-
-        {"label": "Routine Research", "fieldname": "routine", "fieldtype": "Int", "width": 150}
-
-    ]
-
-    for p in projects:
-
-        name = p.project_name.replace(" ","_").lower()
-
-        cols.append({"label":f"{p.project_name} Profile","fieldname":f"{name}_profile","fieldtype":"Int","width":130})
-        cols.append({"label":f"{p.project_name} Surface","fieldname":f"{name}_surface","fieldtype":"Int","width":130})
-        cols.append({"label":f"{p.project_name} Micro","fieldname":f"{name}_micro","fieldtype":"Int","width":130})
-
-    for s in schemes:
-
-        name = s.scheme_name.replace(" ","_").lower()
-
-        cols.append({"label":f"{s.scheme_name} Profile","fieldname":f"{name}_profile_s","fieldtype":"Int","width":130})
-        cols.append({"label":f"{s.scheme_name} Surface","fieldname":f"{name}_surface_s","fieldtype":"Int","width":130})
-        cols.append({"label":f"{s.scheme_name} Micro","fieldname":f"{name}_micro_s","fieldtype":"Int","width":130})
-
-    cols.append({"label":"Total Pending","fieldname":"total_pending","fieldtype":"Int","width":150})
+    cols.append({"label": "Total Pending", "fieldname": "total_pending"})
 
     return cols
 
-def get_session_two_data(filters, projects, schemes):
 
-    labs = get_labs()
+# ======================================================
+# SESSION 2 DATA
+# ======================================================
+def get_session_two_data(ra=False, user=None):
 
-    samples = frappe.db.sql("""
-        SELECT
-            lab_name,
-            target_lab,
-            client_type,
-            project_name,
-            scheme_name,
-            profile_sample,
-            surface_sample,
-            micro_sample
-        FROM `tabSoil Sample Collection`
-        WHERE status != 'completed'
-    """, as_dict=True)
+    if user is None:
+        user = frappe.session.user
 
-    data = []
+    # ── RA: only samples assigned to this RA via ToDo ──
+    if ra:
+
+        emp_name = frappe.db.get_value(
+            "Employee",
+            {"user_id": user},
+            "employee_name"
+        )
+
+        # Fetch all sample names assigned to this RA
+        assigned_samples = frappe.db.sql("""
+            SELECT t.reference_name
+            FROM `tabToDo` t
+            WHERE t.allocated_to = %s
+              AND t.custom_ra_employee_name = %s
+        """, (user, emp_name), as_dict=True)
+
+        assigned_names = [r.reference_name for r in assigned_samples]
+
+        if not assigned_names:
+            return {"rows": [], "clients": []}
+
+        samples = frappe.get_all(
+            "Soil Sample Collection",
+            filters={"name": ["in", assigned_names]},
+            fields=[
+                "name",
+                "lab_name",
+                "target_lab",
+                "client_type",
+                "type_of_collection",
+                "name_of_type",
+                "status"
+            ]
+        )
+
+        def get_client_names(r):
+
+            if r.client_type == "Department":
+
+                type_col = str(r.get("type_of_collection") or "").strip()
+                name_type = str(r.get("name_of_type") or "").strip()
+
+                if type_col and name_type:
+                    base_name = f"{type_col} - {name_type}"
+                elif name_type:
+                    base_name = name_type
+                elif type_col:
+                    base_name = type_col
+                else:
+                    base_name = "Department"
+
+                test_items = frappe.get_all(
+                    "Scheme Test List",
+                    filters={"parent": r.name_of_type},
+                    fields=["test_item"]
+                )
+
+                names = []
+
+                for t in test_items:
+                    if t.test_item:
+                        names.append(f"{base_name} - {t.test_item}")
+
+                return names if names else [base_name]
+
+            return [r.client_type]
+
+        clients = set()
+        ra_row = {}
+
+        for r in samples:
+
+            if r.status == "completed":
+                continue
+
+            if r.status not in (
+                "With Research Assistant",
+            ):
+                continue
+
+            cnames = get_client_names(r)
+
+            for cname in cnames:
+                clients.add(cname)
+                ra_row[cname] = ra_row.get(cname, 0) + 1
+
+        total = sum(ra_row.values())
+        ra_row["lab_name"] = emp_name or user
+        ra_row["total_pending"] = total
+
+        return {"rows": [ra_row], "clients": list(clients)}
+
+    # ── Non-RA: original lab-based logic ──
+    labs = get_labs(user)
+
+    samples = frappe.get_all(
+        "Soil Sample Collection",
+        fields=[
+            "name",
+            "lab_name",
+            "target_lab",
+            "client_type",
+            "type_of_collection",
+            "name_of_type",
+            "status"
+        ]
+    )
+
+    def get_client_names(r):
+
+        if r.client_type == "Department":
+
+            type_col = str(r.get("type_of_collection") or "").strip()
+            name_type = str(r.get("name_of_type") or "").strip()
+
+            if type_col and name_type:
+                base_name = f"{type_col} - {name_type}"
+            elif name_type:
+                base_name = name_type
+            elif type_col:
+                base_name = type_col
+            else:
+                base_name = "Department"
+
+            test_items = frappe.get_all(
+                "Scheme Test List",
+                filters={"parent": r.name_of_type},
+                fields=["test_item"]
+            )
+
+            names = []
+
+            for t in test_items:
+                if t.test_item:
+                    names.append(f"{base_name} - {t.test_item}")
+
+            return names if names else [base_name]
+
+        return [r.client_type]
+
+    data = {}
+    clients = set()
 
     for lab in labs:
+        data[lab] = {}
 
-        row = {"lab_name": lab}
+    for r in samples:
+
+        sample_lab = get_sample_lab(r)
+
+        if sample_lab not in data:
+            continue
+        if r.status == "completed":
+            continue
+
+        if r.status not in (
+            "With Senior Chemist",
+            "With Research Assistant",
+            "Returned to Senior Chemist(Overload)"
+        ):
+            continue
+
+        cnames = get_client_names(r)
+
+        for cname in cnames:
+            clients.add(cname)
+            data[sample_lab][cname] = data[sample_lab].get(cname, 0) + 1
+
+    result = []
+
+    for name in data:
+
+        row = {"lab_name": name}
         total = 0
 
-        farmer = 0
-        consultancy = 0
-
-        # Initialize project columns
-        for p in projects:
-
-            if not p.project_name:
-                continue
-
-            fname = p.project_name.replace(" ", "_").lower()
-
-            row[f"{fname}_profile"] = 0
-            row[f"{fname}_surface"] = 0
-            row[f"{fname}_micro"] = 0
-
-        # Initialize scheme columns
-        for s in schemes:
-
-            if not s.scheme_name:
-                continue
-
-            fname = s.scheme_name.replace(" ", "_").lower()
-
-            row[f"{fname}_profile_s"] = 0
-            row[f"{fname}_surface_s"] = 0
-            row[f"{fname}_micro_s"] = 0
-
-        for sample in samples:
-
-            sample_lab = sample.target_lab if sample.client_type == "Department" else sample.lab_name
-
-            if sample_lab != lab:
-                continue
-
-            # Farmer / Consultancy
-            if sample.client_type == "Farmer":
-                farmer += 1
-
-            elif sample.client_type == "Consultancy":
-                consultancy += 1
-
-            # -----------------------------
-            # PROJECT SAMPLE COUNT
-            # -----------------------------
-            if sample.project_name:
-
-                fname = sample.project_name.replace(" ", "_").lower()
-
-                if sample.profile_sample and f"{fname}_profile" in row:
-                    row[f"{fname}_profile"] += 1
-                    total += 1
-
-                if sample.surface_sample and f"{fname}_surface" in row:
-                    row[f"{fname}_surface"] += 1
-                    total += 1
-
-                if sample.micro_sample and f"{fname}_micro" in row:
-                    row[f"{fname}_micro"] += 1
-                    total += 1
-
-            # -----------------------------
-            # SCHEME SAMPLE COUNT
-            # -----------------------------
-            if sample.scheme_name:
-
-                fname = sample.scheme_name.replace(" ", "_").lower()
-
-                if sample.profile_sample and f"{fname}_profile_s" in row:
-                    row[f"{fname}_profile_s"] += 1
-                    total += 1
-
-                if sample.surface_sample and f"{fname}_surface_s" in row:
-                    row[f"{fname}_surface_s"] += 1
-                    total += 1
-
-                if sample.micro_sample and f"{fname}_micro_s" in row:
-                    row[f"{fname}_micro_s"] += 1
-                    total += 1
-
-        row["farmer"] = farmer
-        row["consultancy"] = consultancy
-        row["campaign"] = 0
-        row["routine"] = 0
-
-        total += farmer + consultancy
+        for c in clients:
+            val = data[name].get(c, 0)
+            row[c] = val
+            total += val
 
         row["total_pending"] = total
+        result.append(row)
 
-        data.append(row)
+    return {"rows": result, "clients": list(clients)}
 
-    return data
+
+# ======================================================
+# HTML
+# ======================================================
+def build_html(c1, d1, c2, d2, ra=False):
+
+    html = """
+    <style>
+    .box{overflow-x:auto;border:1px solid #ccc;margin-bottom:20px;}
+    table{border-collapse:collapse;width:100%;}
+    th,td{border:1px solid #ccc;padding:8px;text-align:center;}
+    th{background:#f5f5f5;}
+    </style>
+    """
+
+    # Session 1
+    html += "<h3>Narrative Progress Report</h3><div class='box'><table><tr>"
+    for col in c1:
+        html += f"<th>{col['label']}</th>"
+    html += "</tr>"
+
+    for row in d1:
+        html += "<tr>"
+        for col in c1:
+            html += f"<td>{row.get(col['fieldname'], '')}</td>"
+        html += "</tr>"
+
+    html += "</table></div>"
+
+    # Session 2 — first column heading comes from c2
+    first_col_label = c2[0]["label"] if c2 else ("Name" if ra else "Lab")
+
+    html += "<h3>Pending Work</h3><div class='box'><table>"
+
+    main_headers = {}
+    field_map = {}
+
+    for col in c2:
+        fname = col["fieldname"]
+        label = col["label"]
+
+        if fname in ("lab_name", "total_pending"):
+            continue
+
+        parts = label.split(" - ")
+
+        if len(parts) >= 3:
+            main = " - ".join(parts[:2])
+            sub = parts[2]
+        else:
+            main = label
+            sub = ""
+
+        if main not in main_headers:
+            main_headers[main] = []
+
+        main_headers[main].append(sub)
+        field_map[(main, sub)] = fname
+
+    order = ["Profile", "Surface"]
+
+    for main in main_headers:
+        main_headers[main] = sorted(
+            main_headers[main],
+            key=lambda x: order.index(x) if x in order else 99
+        )
+
+    html += f"<tr><th rowspan='2'>{first_col_label}</th>"
+
+    for main in main_headers:
+        html += f"<th colspan='{len(main_headers[main])}'>{main}</th>"
+
+    html += "<th rowspan='2'>Total Pending</th></tr>"
+
+    html += "<tr>"
+
+    for main in main_headers:
+        for sub in main_headers[main]:
+            html += f"<th>{sub}</th>"
+
+    html += "</tr>"
+
+    for row in d2:
+        html += "<tr>"
+
+        html += f"<td>{row.get('lab_name', '')}</td>"
+
+        for main in main_headers:
+            for sub in main_headers[main]:
+                fname = field_map.get((main, sub))
+                html += f"<td>{row.get(fname, 0)}</td>"
+
+        html += f"<td>{row.get('total_pending', 0)}</td>"
+
+        html += "</tr>"
+
+    html += "</table></div>"
+
+    return html

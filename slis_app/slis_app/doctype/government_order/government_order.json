@@ -18,7 +18,9 @@
   "attachment",
   "fetch_services",
   "section_break_vbdb",
-  "services_and_rates"
+  "services_and_rates",
+  "section_break_vvrh",
+  "proceedings"
  ],
  "fields": [
   {
@@ -91,12 +93,22 @@
    "fieldname": "fetch_services",
    "fieldtype": "Button",
    "label": "Fetch Services"
+  },
+  {
+   "fieldname": "section_break_vvrh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "proceedings",
+   "fieldtype": "Table",
+   "label": "Proceedings",
+   "options": "Proceedings"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-20 17:11:51.254336",
+ "modified": "2026-04-15 22:31:33.429815",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Government Order",

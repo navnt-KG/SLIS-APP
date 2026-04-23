@@ -35,12 +35,17 @@ def build_report(filters):
     month_end = date(year, month, calendar.monthrange(year, month)[1])
 
     fy_start = date(year, 4, 1) if month >= 4 else date(year - 1, 4, 1)
+    fy_end = date(fy_start.year + 1, 3, 31)
 
     ra_list = get_ra_list()
 
+    # 🔥 ONLY CURRENT FY DATA (MAIN FIX)
     records = frappe.get_all(
         "Soil Sample Collection",
-        filters={"status": "completed"},
+        filters={
+            "status": "completed",
+            "completed_date": ["between", [fy_start, fy_end]]
+        },
         fields=[
             "name", "client_type", "type_of_collection",
             "name_of_type", "completed_date", "total_parameter_count"
@@ -50,6 +55,7 @@ def build_report(filters):
     client_map = {}
     all_tests = set()
 
+    # 🔥 BUILD STRUCTURE ONLY FROM FY DATA
     for r in records:
 
         if not r.completed_date:
@@ -84,6 +90,7 @@ def build_report(filters):
 
     all_tests = list(all_tests)
 
+    # 🔥 INIT DATA (even if empty structure)
     data = {}
 
     for ra in ra_list:
@@ -97,10 +104,8 @@ def build_report(filters):
                 "tests": {t: {"dm": 0, "pt": 0} for t in all_tests}
             }
 
+    # 🔥 CALCULATION ONLY FY DATA
     for r in records:
-
-        if not r.completed_date:
-            continue
 
         cname = get_client_name(r)
 
@@ -141,13 +146,14 @@ def build_report(filters):
 
         if use_total == 1:
 
-            prev = curr = 0
-
             if fy_start <= r.completed_date < month_start:
                 prev = total
-
-            if month_start <= r.completed_date <= month_end:
+                curr = 0
+            elif month_start <= r.completed_date <= month_end:
+                prev = 0
                 curr = total
+            else:
+                prev = curr = 0
 
             data[ra_name][cname]["est_dm"] += curr
             data[ra_name][cname]["est_pt"] += (prev + curr)
@@ -162,13 +168,14 @@ def build_report(filters):
 
             for t in tests:
 
-                prev = curr = 0
-
                 if fy_start <= r.completed_date < month_start:
                     prev = t.parameter_count or 0
-
-                if month_start <= r.completed_date <= month_end:
+                    curr = 0
+                elif month_start <= r.completed_date <= month_end:
+                    prev = 0
                     curr = t.parameter_count or 0
+                else:
+                    prev = curr = 0
 
                 if t.test_name in data[ra_name][cname]["tests"]:
                     data[ra_name][cname]["tests"][t.test_name]["dm"] += curr
@@ -178,7 +185,7 @@ def build_report(filters):
 
 
 # -----------------------------
-# ONLY UI UPDATED (2 changes)
+# UI PART (UNCHANGED)
 # -----------------------------
 def generate_html(ra_list, client_map, all_tests, data):
 
@@ -215,13 +222,11 @@ def generate_html(ra_list, client_map, all_tests, data):
         white-space:nowrap;
     }
 
-    /* 🔥 RA COLOR */
     .ra-cell{
         background:#e3f2fd;
         font-weight:bold;
     }
 
-    /* 🔥 TOTAL COLOR */
     .total-cell{
         background:#f1f8e9;
         font-weight:bold;
@@ -232,7 +237,6 @@ def generate_html(ra_list, client_map, all_tests, data):
     <table class="report-table">
     """
 
-    # HEADER 1
     html += "<tr><th rowspan='3'>Research Assistant</th><th rowspan='3'>Lab</th>"
 
     for c in client_map:
@@ -241,11 +245,9 @@ def generate_html(ra_list, client_map, all_tests, data):
         else:
             html += f"<th colspan='{2 + len(all_tests)*2}'>{c}</th>"
 
-    # TOTAL HEADER
     html += "<th colspan='2'>SS TOTAL</th><th colspan='2'>EST TOTAL</th>"
     html += "</tr>"
 
-    # HEADER 2
     html += "<tr>"
 
     for c in client_map:
@@ -260,7 +262,6 @@ def generate_html(ra_list, client_map, all_tests, data):
     html += "<th colspan='4'></th>"
     html += "</tr>"
 
-    # HEADER 3
     html += "<tr>"
 
     for c in client_map:
@@ -275,7 +276,6 @@ def generate_html(ra_list, client_map, all_tests, data):
     html += "<th>DM</th><th>PT</th><th>DM</th><th>PT</th>"
     html += "</tr>"
 
-    # DATA
     for ra in ra_list:
 
         total_ss_dm = total_ss_pt = 0
@@ -308,7 +308,6 @@ def generate_html(ra_list, client_map, all_tests, data):
 
                     html += f"<td>{dm}</td><td>{pt}</td>"
 
-        # TOTAL
         html += f"<td class='total-cell'>{total_ss_dm}</td><td class='total-cell'>{total_ss_pt}</td>"
         html += f"<td class='total-cell'>{total_est_dm}</td><td class='total-cell'>{total_est_pt}</td>"
 

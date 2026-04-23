@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "creation": "2026-02-06 15:46:31.181949",
  "doctype": "DocType",
@@ -9,10 +10,17 @@
   "results_table",
   "variable_inputs",
   "recommendations_table",
-  "lab_name"
+  "lab_name",
+  "client_type",
+  "type_of_collection",
+  "name_of_type",
+  "number_of_sample",
+  "test_sample_data",
+  "html"
  ],
  "fields": [
   {
+   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "results_table",
    "fieldtype": "Table",
    "label": "Tests Performed",
@@ -20,6 +28,7 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "variable_inputs",
    "fieldtype": "Table",
    "label": "Raw Measurements",
@@ -32,6 +41,7 @@
    "options": "Register"
   },
   {
+   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "recommendations_table",
    "fieldtype": "Table",
    "label": "Recommendations Table",
@@ -42,12 +52,50 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Lab Name"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "client_type",
+   "fieldtype": "Data",
+   "label": "Client Type"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "type_of_collection",
+   "fieldtype": "Data",
+   "label": "Type of Collection"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "name_of_type",
+   "fieldtype": "Data",
+   "label": "Name of Type"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "test_sample_data",
+   "fieldtype": "Table",
+   "hidden": 1,
+   "label": "Test Sample Data ",
+   "options": "Sample Data"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "number_of_sample",
+   "fieldtype": "Int",
+   "label": "Number of Sample"
+  },
+  {
+   "fieldname": "html",
+   "fieldtype": "HTML",
+   "label": "HTML"
   }
  ],
  "grid_page_length": 50,
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-17 15:27:18.660170",
+ "modified": "2026-04-21 09:56:25.863894",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Test Result",
