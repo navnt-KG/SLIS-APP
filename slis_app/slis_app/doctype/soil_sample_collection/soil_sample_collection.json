@@ -681,14 +681,12 @@
    "options": "\nBlock\nPanchayath"
   },
   {
-   "depends_on": "eval:doc.local_body==\"Panchayath\"",
    "fieldname": "panchayath_name",
    "fieldtype": "Link",
    "label": "Panchayath",
    "options": "Panchayath"
   },
   {
-   "depends_on": "eval:doc.local_body==\"Block\"",
    "fieldname": "block_name",
    "fieldtype": "Small Text",
    "label": "Block"
@@ -719,7 +717,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-13 17:43:22.788912",
+ "modified": "2026-04-23 15:13:13.429852",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",
