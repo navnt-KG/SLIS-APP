@@ -35,6 +35,7 @@
   "block_name",
   "number_of_samples",
   "html",
+  "collection_date",
   "section_break_usar",
   "sample_data",
   "sample_related_section",
@@ -681,14 +682,12 @@
    "options": "\nBlock\nPanchayath"
   },
   {
-   "depends_on": "eval:doc.local_body==\"Panchayath\"",
    "fieldname": "panchayath_name",
    "fieldtype": "Link",
    "label": "Panchayath",
    "options": "Panchayath"
   },
   {
-   "depends_on": "eval:doc.local_body==\"Block\"",
    "fieldname": "block_name",
    "fieldtype": "Small Text",
    "label": "Block"
@@ -714,12 +713,17 @@
    "fieldtype": "Table",
    "label": "Sample Data",
    "options": "Sample Data"
+  },
+  {
+   "fieldname": "collection_date",
+   "fieldtype": "Date",
+   "label": "Collection Date "
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-13 17:43:22.788912",
+ "modified": "2026-04-23 14:47:58.627130",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

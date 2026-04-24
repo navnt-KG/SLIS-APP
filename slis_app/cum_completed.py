@@ -2,7 +2,7 @@ import frappe
 from frappe.utils import now_datetime
 
 @frappe.whitelist()
-def get_cumulative_total_samples():
+def get_cumulative_completed_samples():
     today = now_datetime()
     current_year = today.year
     
@@ -17,7 +17,8 @@ def get_cumulative_total_samples():
     # Count samples from that start date until NOW
     # Excluding 'completed' and 'draft'
     count = frappe.db.count("Soil Sample Collection", filters={
-        "date_of_collection": [">=", start_date]
+        "date_of_collection": [">=", start_date],
+        "status": "completed"
     })
     
     return count

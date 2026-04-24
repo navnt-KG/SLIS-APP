@@ -18,7 +18,7 @@ def get_current_fy_completed_count():
     # Ensure "completed" matches your DocType's exact case (e.g., "Completed")
     count = frappe.db.count("Soil Sample Collection", filters={
         "creation": [">=", start_date],
-        "status": "pending" 
+        "status": "completed" 
     })
     
     return count
