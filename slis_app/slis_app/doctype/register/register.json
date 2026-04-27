@@ -1,48 +1,35 @@
 {
  "actions": [],
- "autoname": "field:source_sample_id",
  "creation": "2026-02-08 23:42:09.433242",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "source_sample_id",
-  "soil_sample_id",
   "latitude",
   "longitude",
   "tests",
   "client_type",
-  "type_of_collection",
-  "name_of_type",
-  "number_of_sample",
   "crops_list",
-  "plot_size",
-  "lab_name",
-  "html",
-  "register_sample_data"
+  "plot_size"
  ],
  "fields": [
   {
    "fieldname": "source_sample_id",
    "fieldtype": "Link",
    "label": "Source Sample Form",
-   "options": "Soil Sample Collection",
-   "unique": 1
+   "options": "Soil Sample Collection"
   },
   {
-   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "latitude",
    "fieldtype": "Float",
-   "hidden": 1,
    "label": "Latitude"
   },
   {
-   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "longitude",
    "fieldtype": "Float",
    "label": "Longitude"
   },
   {
-   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "tests",
    "fieldtype": "Table",
    "label": "Tests ",
@@ -54,7 +41,6 @@
    "label": "Client Type"
   },
   {
-   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "crops_list",
    "fieldtype": "Table",
    "label": "Crops List",
@@ -64,55 +50,15 @@
    "fieldname": "plot_size",
    "fieldtype": "Data",
    "label": "Plot SIze"
-  },
-  {
-   "fieldname": "soil_sample_id",
-   "fieldtype": "Link",
-   "label": "Soil sample id",
-   "options": "Soil Sample Collection"
-  },
-  {
-   "depends_on": "eval:doc.client_type == 'Department'",
-   "fieldname": "type_of_collection",
-   "fieldtype": "Data",
-   "label": "Type of Collection"
-  },
-  {
-   "fieldname": "name_of_type",
-   "fieldtype": "Data",
-   "label": "Name of Type"
-  },
-  {
-   "fieldname": "number_of_sample",
-   "fieldtype": "Int",
-   "label": "Number of Samples"
-  },
-  {
-   "fieldname": "lab_name",
-   "fieldtype": "Data",
-   "label": "Lab Name"
-  },
-  {
-   "fieldname": "html",
-   "fieldtype": "HTML",
-   "label": "Sample Table"
-  },
-  {
-   "fieldname": "register_sample_data",
-   "fieldtype": "Table",
-   "hidden": 1,
-   "label": "Register Sample Data ",
-   "options": "Sample Data"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-27 12:35:12.050979",
+ "modified": "2026-04-27 12:59:57.234602",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Register",
- "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

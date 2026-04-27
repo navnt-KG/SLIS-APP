@@ -33,16 +33,16 @@
   "local_body",
   "panchayath_name",
   "block_name",
-  "number_of_samples",
-  "collection_date",
   "lab_code_prefix",
   "lab_code_start",
-  "lab_code",
+  "number_of_samples",
   "html",
+  "collection_date",
   "section_break_usar",
   "sample_data",
   "sample_related_section",
   "state",
+  "district",
   "local_body_type",
   "location",
   "panchayath",
@@ -91,7 +91,6 @@
   "return_to_psc_date",
   "return_to_sc_date",
   "common_section",
-  "date_of_collection",
   "lab_register_created",
   "allow_send_back_reason",
   "psc_entry_target_lab",
@@ -130,12 +129,6 @@
    "label": "Client Type",
    "read_only": 1,
    "reqd": 1
-  },
-  {
-   "fieldname": "date_of_collection",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Date Of Collection"
   },
   {
    "default": "0",
@@ -250,6 +243,12 @@
    "fieldname": "plot_size",
    "fieldtype": "Small Text",
    "label": "Plot Size ( in cent )"
+  },
+  {
+   "fieldname": "district",
+   "fieldtype": "Link",
+   "label": "District",
+   "options": "District"
   },
   {
    "fieldname": "local_body_type",
@@ -664,6 +663,7 @@
    "label": "Department Details"
   },
   {
+   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "district_name",
    "fieldtype": "Link",
    "label": "District Name",
@@ -706,17 +706,10 @@
   {
    "fieldname": "sample_data",
    "fieldtype": "Table",
-   "hidden": 1,
    "label": "Sample Data",
    "options": "Sample Data"
   },
   {
-   "fieldname": "collection_date",
-   "fieldtype": "Date",
-   "label": "Collection Date "
-  },
-  {
-   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "lab_code_prefix",
    "fieldtype": "Data",
    "label": "Lab Code Prefix"
@@ -724,20 +717,18 @@
   {
    "fieldname": "lab_code_start",
    "fieldtype": "Int",
-   "label": "Lab code start"
+   "label": "Lab code Start"
   },
   {
-   "depends_on": "eval:doc.client_type == 'Department'",
-   "fieldname": "lab_code",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Lab Code"
+   "fieldname": "collection_date",
+   "fieldtype": "Date",
+   "label": "Collection Date"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-27 12:46:19.636213",
+ "modified": "2026-04-27 15:00:24.215422",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

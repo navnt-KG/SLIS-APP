@@ -5,18 +5,19 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_bknq"
+  "custom_district_office_name"
  ],
  "fields": [
   {
-   "fieldname": "section_break_bknq",
-   "fieldtype": "Section Break"
+   "fieldname": "custom_district_office_name",
+   "fieldtype": "Data",
+   "label": "District Office Name"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-06 16:23:29.244118",
+ "modified": "2026-04-26 13:30:19.074645",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "District Office Names",

@@ -117,6 +117,8 @@
 #                         "Edit allowed only when status is 'With PSC Officer' or 'Returned to PSC Officer (Overload)'"
 #                     )
 
+#new code 
+
 
 import frappe
 from frappe.model.document import Document
@@ -130,11 +132,10 @@ class SoilSampleCollection(Document):
             return
 
         # 1. Basic Validations
-        # 1. Basic Validations
         if not self.client_type:
             frappe.throw("Client Type is required for naming.")
 
-# reference_name required only for some types
+        # Reference name required only for specific types
         if self.client_type in ["Farmer", "Consultancy"] and not self.reference_name:
             frappe.throw("Reference Name is required for this Client Type.")
 
@@ -143,6 +144,7 @@ class SoilSampleCollection(Document):
         prefix = prefix_map.get(self.client_type, "SS")
 
         # 3. Define Combined Mappings
+
         # Lab Mappings
         lab_map = {
             "Hi-Tech Soil Analytical Lab WYD": "WYD",
@@ -198,7 +200,11 @@ class SoilSampleCollection(Document):
             frappe.throw("Neither a valid Lab nor a District Office was found for your Employee record.")
 
         # 6. Process Reference Name and Generate Final Name
-        ref = self.reference_name.strip().upper().replace(" ", "-")
+        if self.reference_name:
+            ref = self.reference_name.strip().upper().replace(" ", "-")
+        else:
+            ref = "GEN"   # fallback for Department or empty cases
+
         self.name = make_autoname(f"{prefix}-{lab_code}-{ref}-.#####")
 
     def validate(self):
