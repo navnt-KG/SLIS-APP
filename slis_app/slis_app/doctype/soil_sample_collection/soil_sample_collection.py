@@ -130,8 +130,13 @@ class SoilSampleCollection(Document):
             return
 
         # 1. Basic Validations
-        if not self.client_type or not self.reference_name:
-            frappe.throw("Client Type and Reference Name are required for naming.")
+        # 1. Basic Validations
+        if not self.client_type:
+            frappe.throw("Client Type is required for naming.")
+
+# reference_name required only for some types
+        if self.client_type in ["Farmer", "Consultancy"] and not self.reference_name:
+            frappe.throw("Reference Name is required for this Client Type.")
 
         # 2. Map Client Type to Prefix
         prefix_map = {"Farmer": "FS", "Department": "DS", "Consultancy": "CS"}

@@ -34,13 +34,15 @@
   "panchayath_name",
   "block_name",
   "number_of_samples",
-  "html",
   "collection_date",
+  "lab_code_prefix",
+  "lab_code_start",
+  "lab_code",
+  "html",
   "section_break_usar",
   "sample_data",
   "sample_related_section",
   "state",
-  "district",
   "local_body_type",
   "location",
   "panchayath",
@@ -248,12 +250,6 @@
    "fieldname": "plot_size",
    "fieldtype": "Small Text",
    "label": "Plot Size ( in cent )"
-  },
-  {
-   "fieldname": "district",
-   "fieldtype": "Link",
-   "label": "District",
-   "options": "District"
   },
   {
    "fieldname": "local_body_type",
@@ -668,7 +664,6 @@
    "label": "Department Details"
   },
   {
-   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "district_name",
    "fieldtype": "Link",
    "label": "District Name",
@@ -711,6 +706,7 @@
   {
    "fieldname": "sample_data",
    "fieldtype": "Table",
+   "hidden": 1,
    "label": "Sample Data",
    "options": "Sample Data"
   },
@@ -718,12 +714,30 @@
    "fieldname": "collection_date",
    "fieldtype": "Date",
    "label": "Collection Date "
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "lab_code_prefix",
+   "fieldtype": "Data",
+   "label": "Lab Code Prefix"
+  },
+  {
+   "fieldname": "lab_code_start",
+   "fieldtype": "Int",
+   "label": "Lab code start"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "lab_code",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Lab Code"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-23 14:47:58.627130",
+ "modified": "2026-04-27 12:46:19.636213",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

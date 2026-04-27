@@ -5,7 +5,7 @@
    "label": "Sample Status"
   }
  ],
- "content": "[{\"id\":\"t-J03cLKVa\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"financial year\",\"col\":3}},{\"id\":\"ssWjK7pAiP\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Samples This Month\",\"col\":3}},{\"id\":\"LKvRnr_zHK\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Samples Pending This Month\",\"col\":3}},{\"id\":\"srEXKuyn4r\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Testing Completed\",\"col\":3}},{\"id\":\"IJ7EBeyqvc\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"COMPLETED THIS FINANCIAL YEAR\",\"col\":3}},{\"id\":\"TqVZ2GjK7V\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Cumulative Completed Tests\",\"col\":3}},{\"id\":\"GIN9AwWImq\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Cumulative Total Samples\",\"col\":3}},{\"id\":\"g1gW7Ojr4A\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Current FY Total Samples\",\"col\":3}},{\"id\":\"bLEzWI9ULg\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Previous FY Completed Tests\",\"col\":4}},{\"id\":\"iFIRhuk2wz\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Previous FY Total Samples\",\"col\":4}},{\"id\":\"qLP4tQetcY\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"previous year's balance\",\"col\":4}},{\"id\":\"dZCW1am7WG\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Sample Status\",\"col\":12}},{\"id\":\"ZoksPrcaQR\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Lab Wise Sample Status\",\"col\":12}},{\"id\":\"y2ru5byh-0\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"month wise lab status\",\"col\":12}},{\"id\":\"KEWtCeFzUQ\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Current FY Lab-Wise\",\"col\":12}},{\"id\":\"8f6YrPEzqj\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Recent Activities\",\"col\":12}},{\"id\":\"QzROP6wImB\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Recent Sample List\",\"col\":9}},{\"id\":\"dREKa5niB0\",\"type\":\"card\",\"data\":{\"card_name\":\"Quick Actions\",\"col\":3}}]",
+ "content": "[{\"id\":\"t-J03cLKVa\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"financial year\",\"col\":3}},{\"id\":\"ssWjK7pAiP\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Samples This Month\",\"col\":3}},{\"id\":\"LKvRnr_zHK\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Samples Pending This Month\",\"col\":3}},{\"id\":\"srEXKuyn4r\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Testing Completed\",\"col\":3}},{\"id\":\"IJ7EBeyqvc\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"COMPLETED THIS FINANCIAL YEAR\",\"col\":3}},{\"id\":\"TqVZ2GjK7V\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Cumulative Completed Tests\",\"col\":3}},{\"id\":\"GIN9AwWImq\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Cumulative Total Samples\",\"col\":3}},{\"id\":\"g1gW7Ojr4A\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Current FY Total Samples\",\"col\":3}},{\"id\":\"bLEzWI9ULg\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Previous FY Completed Tests\",\"col\":4}},{\"id\":\"iFIRhuk2wz\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Previous FY Total Samples\",\"col\":4}},{\"id\":\"qLP4tQetcY\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"previous year's balance\",\"col\":4}},{\"id\":\"dZCW1am7WG\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Sample Status\",\"col\":12}},{\"id\":\"ZoksPrcaQR\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Lab Wise Sample Status\",\"col\":12}},{\"id\":\"y2ru5byh-0\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"month wise lab status\",\"col\":12}},{\"id\":\"KEWtCeFzUQ\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Current FY Lab-Wise\",\"col\":12}},{\"id\":\"8f6YrPEzqj\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Recent Activities\",\"col\":12}},{\"id\":\"QzROP6wImB\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Recent Sample List\",\"col\":9}},{\"id\":\"dREKa5niB0\",\"type\":\"card\",\"data\":{\"card_name\":\"Quick Actions\",\"col\":3}},{\"id\":\"wi0uDqhToA\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Heat Map\",\"col\":12}}]",
  "creation": "2026-03-25 16:52:54.964766",
  "custom_blocks": [
   {
@@ -13,7 +13,11 @@
    "label": "Lab Wise Sample Status"
   },
   {
-   "custom_block_name": "COMPLETED THIS FINANCIAL YEAR",
+   "custom_block_name": "Heat Map",
+   "label": "Heat Map"
+  },
+  {
+   "custom_block_name": "COMPLETED THIS FY",
    "label": "COMPLETED THIS FINANCIAL YEAR"
   },
   {
@@ -124,7 +128,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-04-24 10:31:14.149162",
+ "modified": "2026-04-27 12:10:44.878351",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Intake",
