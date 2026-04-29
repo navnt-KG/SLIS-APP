@@ -13,11 +13,12 @@
   "recommendations_table",
   "lab_name",
   "client_type",
-  "type_of_collection",
   "name_of_type",
   "number_of_sample",
   "test_sample_data",
-  "html"
+  "html",
+  "lab_code_prefix",
+  "lab_code_start"
  ],
  "fields": [
   {
@@ -62,12 +63,6 @@
   },
   {
    "depends_on": "eval:doc.client_type == 'Department'",
-   "fieldname": "type_of_collection",
-   "fieldtype": "Data",
-   "label": "Type of Collection"
-  },
-  {
-   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "name_of_type",
    "fieldtype": "Data",
    "label": "Name of Type"
@@ -92,17 +87,29 @@
    "label": "HTML"
   },
   {
-   "fieldname": "real_sample_id",
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "lab_code_prefix",
    "fieldtype": "Data",
+   "label": "Lab code Prefix"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "lab_code_start",
+   "fieldtype": "Int",
+   "label": "Lab Code Start"
+  },
+  {
+   "fieldname": "real_sample_id",
+   "fieldtype": "Link",
    "label": "Sample Id",
-   "unique": 1
+   "options": "Soil Sample Collection"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-27 12:06:30.901069",
+ "modified": "2026-04-28 16:41:10.784419",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Test Result",

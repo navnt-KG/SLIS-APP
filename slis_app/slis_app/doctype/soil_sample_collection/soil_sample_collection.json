@@ -26,8 +26,9 @@
   "column_break_nxzn",
   "consultancy_type",
   "status",
-  "department_details_section",
+  "section_break_scjx",
   "type_of_collection",
+  "department_details_section",
   "name_of_type",
   "district_name",
   "local_body",
@@ -36,8 +37,8 @@
   "lab_code_prefix",
   "lab_code_start",
   "number_of_samples",
-  "html",
   "collection_date",
+  "html",
   "section_break_usar",
   "sample_data",
   "sample_related_section",
@@ -230,7 +231,7 @@
   },
   {
    "fieldname": "survey_number",
-   "fieldtype": "Small Text",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Survey Number"
   },
@@ -241,7 +242,7 @@
   },
   {
    "fieldname": "plot_size",
-   "fieldtype": "Small Text",
+   "fieldtype": "Data",
    "label": "Plot Size ( in cent )"
   },
   {
@@ -309,9 +310,9 @@
    "label": "Contact Number"
   },
   {
-   "fetch_from": "client.farmer_name",
    "fieldname": "farmer_name",
    "fieldtype": "Text",
+   "hidden": 1,
    "label": "Farmer Name",
    "read_only": 1
   },
@@ -349,28 +350,28 @@
    "read_only": 1
   },
   {
-   "fetch_from": "client.agency_name",
    "fieldname": "agency_name",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Agency Name",
    "read_only": 1
   },
   {
-   "fetch_from": "client.department_name",
    "fieldname": "department_name",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Department Name",
    "read_only": 1
   },
   {
-   "fetch_from": "client.institution_name",
    "fieldname": "institution_name",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Institution Name",
    "read_only": 1
   },
   {
-   "fetch_from": "client.name1",
+   "fetch_from": "client.name_field",
    "fieldname": "name1",
    "fieldtype": "Data",
    "label": "Name",
@@ -417,6 +418,7 @@
    "depends_on": "eval:doc.scheme_name == \"MAM\"",
    "fieldname": "client_name",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Client Name"
   },
   {
@@ -658,33 +660,34 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "department_details_section",
    "fieldtype": "Section Break",
    "label": "Department Details"
   },
   {
-   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "district_name",
    "fieldtype": "Link",
    "label": "District Name",
    "options": "District"
   },
   {
-   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "local_body",
    "fieldtype": "Select",
    "label": "Local Body",
    "options": "\nBlock\nPanchayath"
   },
   {
+   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "panchayath_name",
    "fieldtype": "Link",
    "label": "Panchayath",
    "options": "Panchayath"
   },
   {
+   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "block_name",
-   "fieldtype": "Small Text",
+   "fieldtype": "Data",
    "label": "Block"
   },
   {
@@ -710,11 +713,13 @@
    "options": "Sample Data"
   },
   {
+   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "lab_code_prefix",
    "fieldtype": "Data",
    "label": "Lab Code Prefix"
   },
   {
+   "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "lab_code_start",
    "fieldtype": "Int",
    "label": "Lab code Start"
@@ -723,12 +728,16 @@
    "fieldname": "collection_date",
    "fieldtype": "Date",
    "label": "Collection Date"
+  },
+  {
+   "fieldname": "section_break_scjx",
+   "fieldtype": "Section Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-27 15:00:24.215422",
+ "modified": "2026-04-29 10:31:38.841961",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

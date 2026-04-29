@@ -8,29 +8,25 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "login_lab_name",
   "client_type",
+  "address",
+  "name_field",
+  "column_break_pesw",
   "sample_collection_date",
   "contact_number",
   "alternate_contact_number",
-  "login_lab_name",
-  "column_break_pesw",
-  "address",
   "mail_id",
-  "farmer_section_section",
-  "farmer_name",
   "department_section_section",
   "column_break_vtbg",
   "type_of_collection",
+  "custom_name_of_type",
   "column_break_rlmh",
   "campaign_date",
   "consultancy_section_section",
   "consultancy_type",
-  "department_name",
   "education_level",
-  "column_break_ddic",
-  "agency_name",
-  "institution_name",
-  "name1"
+  "column_break_ddic"
  ],
  "fields": [
   {
@@ -79,32 +75,8 @@
    "options": "\nStudents and Researchers\nOther Government Departments\nInstitutions\nAgencies\nIndividuals"
   },
   {
-   "depends_on": "eval: doc.consultancy_type == \"Agencies\"",
-   "fieldname": "agency_name",
-   "fieldtype": "Data",
-   "label": "Agency Name"
-  },
-  {
-   "depends_on": "eval: doc.consultancy_type == \"Other Government Departments\"",
-   "fieldname": "department_name",
-   "fieldtype": "Data",
-   "label": "Department Name"
-  },
-  {
    "fieldname": "column_break_ddic",
    "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:doc.client_type==\"Consultancy\" && [\"Institutions\",\"Students and Researchers\"].includes(doc.consultancy_type)\n",
-   "fieldname": "institution_name",
-   "fieldtype": "Data",
-   "label": "Institution Name"
-  },
-  {
-   "depends_on": "eval:doc.client_type==\"Consultancy\" && (doc.consultancy_type==\"Individuals\" || doc.consultancy_type==\"Students and Researchers\")\n",
-   "fieldname": "name1",
-   "fieldtype": "Data",
-   "label": "Name"
   },
   {
    "fieldname": "mail_id",
@@ -130,17 +102,6 @@
    "width": "2"
   },
   {
-   "fieldname": "farmer_section_section",
-   "fieldtype": "Section Break",
-   "label": "Farmer Section"
-  },
-  {
-   "depends_on": "eval:doc.client_type ==\"Farmer\"",
-   "fieldname": "farmer_name",
-   "fieldtype": "Data",
-   "label": "Farmer Name"
-  },
-  {
    "depends_on": "eval:doc.client_type==\"Consultancy\" && doc.consultancy_type==\"Students and Researchers\"",
    "fieldname": "education_level",
    "fieldtype": "Select",
@@ -163,18 +124,30 @@
    "depends_on": "eval:doc.client_type==\"Farmer\" || doc.client_type==\"Consultancy\"",
    "fieldname": "sample_collection_date",
    "fieldtype": "Date",
+   "hidden": 1,
    "label": "Sample Collection Date"
+  },
+  {
+   "fieldname": "name_field",
+   "fieldtype": "Data",
+   "label": "Name"
+  },
+  {
+   "fieldname": "custom_name_of_type",
+   "fieldtype": "Link",
+   "label": "Program Name",
+   "options": "Name Of Type"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-13 15:56:06.325420",
+ "modified": "2026-04-29 15:39:24.720170",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Clients",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

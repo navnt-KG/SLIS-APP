@@ -19,7 +19,7 @@ def get_previous_fy_total_samples():
     # Count samples where status is NOT "completed"
     # Note: Ensure "completed" matches the exact case in your DocType
     count = frappe.db.count("Soil Sample Collection", filters={
-        "date_of_collection": ["between", [start_date, end_date]]
+        "collection_date": ["between", [start_date, end_date]]
     })
     
     return count

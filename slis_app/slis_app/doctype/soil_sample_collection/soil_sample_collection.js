@@ -180,8 +180,9 @@ function create_register_from_form(frm) {
         // 🔥 IMPORTANT FIX (YOU MISSED BEFORE)
         new_doc.name_of_type = frm.doc.name_of_type;
         new_doc.type_of_collection = frm.doc.type_of_collection;
-        new_doc.number_of_sample = frm.doc.number_of_samples;
-
+        new_doc.number_of_samples = frm.doc.number_of_samples;
+        new_doc.lab_code_prefix = frm.doc.lab_code_prefix;
+        new_doc.lab_code_start = frm.doc.lab_code_start;
         // 🔥 TABLE COPY
         new_doc.register_sample_data = [];
 
@@ -191,7 +192,8 @@ function create_register_from_form(frm) {
 
                 new_doc.register_sample_data.push({
                     sample_id: row.sample_id,
-                    values_json: row.values_json
+                    values_json: row.values_json,
+                    lab_code: row.lab_code
                 });
 
             });

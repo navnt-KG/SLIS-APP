@@ -8,9 +8,16 @@
   "latitude",
   "longitude",
   "tests",
-  "client_type",
   "crops_list",
-  "plot_size"
+  "plot_size",
+  "section_break_sycb",
+  "client_type",
+  "name_of_type",
+  "number_of_samples",
+  "register_sample_data",
+  "lab_code_prefix",
+  "lab_code_start",
+  "html"
  ],
  "fields": [
   {
@@ -30,6 +37,7 @@
    "label": "Longitude"
   },
   {
+   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "tests",
    "fieldtype": "Table",
    "label": "Tests ",
@@ -41,6 +49,7 @@
    "label": "Client Type"
   },
   {
+   "depends_on": "eval:doc.client_type != 'Department'",
    "fieldname": "crops_list",
    "fieldtype": "Table",
    "label": "Crops List",
@@ -50,12 +59,53 @@
    "fieldname": "plot_size",
    "fieldtype": "Data",
    "label": "Plot SIze"
+  },
+  {
+   "fieldname": "section_break_sycb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "name_of_type",
+   "fieldtype": "Data",
+   "label": "Name of Type"
+  },
+  {
+   "fieldname": "number_of_samples",
+   "fieldtype": "Int",
+   "label": "Number of Samples"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "register_sample_data",
+   "fieldtype": "Table",
+   "hidden": 1,
+   "label": "Register Sample Data",
+   "options": "Sample Data"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "lab_code_prefix",
+   "fieldtype": "Data",
+   "label": "Lab code Prefix"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "lab_code_start",
+   "fieldtype": "Int",
+   "label": "Lab Code Start"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Department'",
+   "fieldname": "html",
+   "fieldtype": "HTML",
+   "label": "Sample Table"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-27 12:59:57.234602",
+ "modified": "2026-04-28 10:04:14.755022",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Register",

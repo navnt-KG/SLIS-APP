@@ -34,6 +34,10 @@
   {
    "fieldname": "soil_sample_collection",
    "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Soil Sample Collection",
    "options": "Soil Sample Collection"
   },
@@ -57,7 +61,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-24 14:26:44.091210",
+ "modified": "2026-04-28 10:48:28.065560",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Test Input Data",
