@@ -166,7 +166,7 @@ class SoilSampleCollection(Document):
             "Idukki": "IDU",
             "Ernakulam": "ERS", 
             "Thrissur": "TSR", 
-            "Palakkad": "PGT",
+            "Palakad": "PGT",
             "Malappuram": "MLP", 
             "Kozhikode": "KZK", 
             "Wayanad": "WAY",

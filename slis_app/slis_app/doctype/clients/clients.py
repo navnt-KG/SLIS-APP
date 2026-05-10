@@ -89,7 +89,7 @@ class Clients(Document):
         district_map = {
             "Trivandrum": "TVC", "Kollam": "QLN", "Pathanamthitta": "PTA",
             "Alappuzha": "ALP", "Kottayam": "KTM", "Idukki": "IDU",
-            "Ernakulam": "ERS", "Thrissur": "TSR", "Palakkad": "PGT",
+            "Ernakulam": "ERS", "Thrissur": "TSR", "Palakad": "PGT",
             "Malappuram": "MLP", "Kozhikode": "KZK", "Wayanad": "WAY",
             "Kannur": "CAN", "Kasaragod": "KGQ"
         }

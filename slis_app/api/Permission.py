@@ -5,7 +5,7 @@ def sample_permission_query(user=None):
     roles = frappe.get_roles(user)
 
     # ADMIN / MD - Full access
-    if user == "Administrator" or "Managing Director" in roles:
+    if user == "Administrator" or "slis_admin" in roles:
         return ""
 
     # Employee details fetch cheyyunnu
@@ -20,31 +20,53 @@ def sample_permission_query(user=None):
         return f"owner = '{user}'"
 
     conditions = []
+
+    # =====================================================
+    # SOIL INTAKER L1 / SOIL TESTER L1
+    # ONLY OWN CREATED + ASSIGNED SAMPLES
+    # =====================================================
+    if "Soil Intaker L1" in roles or "Soil Tester L1" in roles:
+        return (
+            f"(owner = '{user}' "
+            f"OR `_assign` LIKE '%%\"{user}\"%%')"
+        )
+
+    # =====================================================
+    # SOIL INTAKER L3
+    # ONLY ASSIGNED SAMPLES
+    # =====================================================
+    if "Soil Intaker L3" in roles:
+        return (
+            f"(`_assign` LIKE '%%\"{user}\"%%')"
+        )
+
+    # DISTRICT OFFICE
     if employee.employment_type == "District Office":
         conditions.append("(client_type = 'Department')")
-    #  Basic Permissions
+
+    # BASIC PERMISSIONS
     conditions.append(f"owner = '{user}'")
     conditions.append(f"(`_assign` LIKE '%%\"{user}\"%%')")
 
- # PSC OFFICER
-    if "PSC Officer" in roles:
+    # PSC OFFICER
+    if "slis_admin" in roles:
         conditions.append(
             "("
             "employee_type = 'Lab' "
             "OR (client_type = 'Department' "
             "AND status IN ('With PSC Officer', 'Returned to PSC Officer (Overload)'))"
             ")"
-    )
+        )
 
-    #  ASSISTANT DIRECTOR
-    if "Assistant Director" in roles and employee.custom_district_office_name:
+    # ASSISTANT DIRECTOR
+    if "Soil Intaker L2" in roles and employee.custom_district_office_name:
         conditions.append(
             f"(employee_type = 'District Office' "
             f"AND district_office_name = '{employee.custom_district_office_name}')"
         )
 
-    #  SENIOR CHEMIST
-    if "Senior Chemist" in roles and employee.custom_lab_name:
+    # SENIOR CHEMIST
+    if "Soil Intaker L2" in roles and employee.custom_lab_name:
         conditions.append(
             f"(client_type = 'Department' "
             f"AND target_lab = '{employee.custom_lab_name}' "
@@ -57,21 +79,7 @@ def sample_permission_query(user=None):
             f"))"
         )
 
-    #  RESEARCH ASSISTANT
-    if "Research Assistant" in roles and employee.custom_lab_name:
-        conditions.append(
-            f"(client_type = 'Department' "
-            f"AND target_lab = '{employee.custom_lab_name}' "
-            f"AND status IN ("
-            f"'With Research Assistant', "
-            f"'completed', "
-            f"'cancelled', "
-            f"'Returned to Senior Chemist(Overload)'"
-            f"))"
-        )
-
-    #  FARMER / CONSULTANCY
- # FARMER / CONSULTANCY
+    # FARMER / CONSULTANCY
     if employee.custom_lab_name and employee.employment_type != "District Office":
         conditions.append(
             f"(client_type IN ('Farmer', 'Consultancy') "

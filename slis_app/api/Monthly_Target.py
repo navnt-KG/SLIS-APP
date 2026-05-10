@@ -82,7 +82,7 @@ def calculate_target(docname):
                 "Has Role",
                 {
                     "parent": emp.user_id,
-                    "role": "Research Assistant"
+                    "role": "Soil Tester L1"
                 }
             )
 

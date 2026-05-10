@@ -38,10 +38,12 @@
   "lab_code_start",
   "number_of_samples",
   "collection_date",
+  "total_parameter_count",
   "html",
   "section_break_usar",
   "sample_data",
   "sample_related_section",
+  "date_of_collection",
   "state",
   "district",
   "local_body_type",
@@ -84,7 +86,7 @@
   "tests",
   "amount_payable",
   "discount_percentage",
-  "total_parameter_count",
+  "payment_details",
   "dates_section",
   "assigned_to_lab_date",
   "assigned_to_ra__date",
@@ -567,12 +569,14 @@
    "depends_on": "eval: doc.client_type != \"Department\"",
    "fieldname": "amount_payable",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Amount Payable"
   },
   {
    "depends_on": "eval: doc.client_type != \"Department\"",
    "fieldname": "discount_percentage",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Discount % "
   },
   {
@@ -642,7 +646,6 @@
   {
    "fieldname": "total_parameter_count",
    "fieldtype": "Int",
-   "hidden": 1,
    "label": "Total Parameter Count"
   },
   {
@@ -656,11 +659,11 @@
   {
    "fieldname": "name_of_type",
    "fieldtype": "Data",
-   "label": "Name of Type",
+   "label": "Department Program Name",
    "read_only": 1
   },
   {
-   "depends_on": "eval:doc.client_type == 'Department'",
+   "depends_on": "eval:doc.client_type != 'Farmer'",
    "fieldname": "department_details_section",
    "fieldtype": "Section Break",
    "label": "Department Details"
@@ -709,14 +712,16 @@
   {
    "fieldname": "sample_data",
    "fieldtype": "Table",
+   "hidden": 1,
    "label": "Sample Data",
    "options": "Sample Data"
   },
   {
    "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "lab_code_prefix",
-   "fieldtype": "Data",
-   "label": "Lab Code Prefix"
+   "fieldtype": "Link",
+   "label": "Lab Code Prefix",
+   "options": "Lab Code Prefix"
   },
   {
    "depends_on": "eval:doc.client_type == 'Department'",
@@ -732,12 +737,24 @@
   {
    "fieldname": "section_break_scjx",
    "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.client_type == 'Farmer'",
+   "fieldname": "date_of_collection",
+   "fieldtype": "Date",
+   "label": "Date of Collection "
+  },
+  {
+   "fieldname": "payment_details",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Payment Details"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-29 10:31:38.841961",
+ "modified": "2026-05-09 16:30:53.325978",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

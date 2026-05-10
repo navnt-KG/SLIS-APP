@@ -7,18 +7,19 @@
  "engine": "InnoDB",
  "field_order": [
   "sample_id",
-  "real_sample_id",
+  "main_sample_id",
   "results_table",
   "variable_inputs",
   "recommendations_table",
   "lab_name",
   "client_type",
+  "section_break_viem",
   "name_of_type",
   "number_of_sample",
-  "test_sample_data",
-  "html",
   "lab_code_prefix",
-  "lab_code_start"
+  "lab_code_start",
+  "html",
+  "test_sample_data"
  ],
  "fields": [
   {
@@ -39,6 +40,7 @@
   {
    "fieldname": "sample_id",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Register Id",
    "options": "Register"
   },
@@ -99,7 +101,11 @@
    "label": "Lab Code Start"
   },
   {
-   "fieldname": "real_sample_id",
+   "fieldname": "section_break_viem",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "main_sample_id",
    "fieldtype": "Link",
    "label": "Sample Id",
    "options": "Soil Sample Collection"
@@ -109,7 +115,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-28 16:41:10.784419",
+ "modified": "2026-05-08 11:09:13.548288",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Test Result",
