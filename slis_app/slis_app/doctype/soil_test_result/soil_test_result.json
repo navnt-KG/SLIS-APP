@@ -58,7 +58,7 @@
    "label": "Lab Name"
   },
   {
-   "depends_on": "eval:doc.client_type == 'Department'",
+   "depends_on": "eval:doc.client_type == 'Department'|| doc.client_type == 'Consultancy'",
    "fieldname": "client_type",
    "fieldtype": "Data",
    "label": "Client Type"
@@ -70,7 +70,7 @@
    "label": "Name of Type"
   },
   {
-   "depends_on": "eval:doc.client_type == 'Department'",
+   "depends_on": "eval:doc.client_type == 'Department' || doc.client_type =='Consultancy'",
    "fieldname": "test_sample_data",
    "fieldtype": "Table",
    "hidden": 1,
@@ -78,7 +78,7 @@
    "options": "Sample Data"
   },
   {
-   "depends_on": "eval:doc.client_type == 'Department'",
+   "depends_on": "eval:doc.client_type == 'Department'|| doc.client_type == 'Consultancy'",
    "fieldname": "number_of_sample",
    "fieldtype": "Int",
    "label": "Number of Sample"
@@ -89,13 +89,13 @@
    "label": "HTML"
   },
   {
-   "depends_on": "eval:doc.client_type == 'Department'",
+   "depends_on": "eval:doc.client_type == 'Department'|| doc.client_type == 'Consultancy'",
    "fieldname": "lab_code_prefix",
    "fieldtype": "Data",
    "label": "Lab code Prefix"
   },
   {
-   "depends_on": "eval:doc.client_type == 'Department'",
+   "depends_on": "eval:doc.client_type == 'Department'|| doc.client_type == 'Consultancy'",
    "fieldname": "lab_code_start",
    "fieldtype": "Int",
    "label": "Lab Code Start"
@@ -115,7 +115,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-08 11:09:13.548288",
+ "modified": "2026-05-11 19:50:05.718939",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Test Result",
