@@ -16,7 +16,7 @@ def execute(filters=None):
 def get_columns():
     return [
         {"label": _("Employee"), "fieldname": "employee", "fieldtype": "Link", "options": "Employee", "width": 150},
-        {"label": _("Program Name"), "fieldname": "program_name", "fieldtype": "Data", "width": 200},
+        {"label": _("Program Name"), "fieldname": "name_of_type", "fieldtype": "Data", "width": 200},
         {"label": _("From Date"), "fieldname": "from_date", "fieldtype": "Date", "width": 120},
         {"label": _("To Date"), "fieldname": "to_date", "fieldtype": "Date", "width": 120},
         {"label": _("Description"), "fieldname": "description", "fieldtype": "Small Text", "width": 300},
@@ -31,7 +31,7 @@ def get_data(filters):
         conditions["to_date"] = ["<=", filters.get("to_date")]
 
     return frappe.get_all("Movement Register", 
-        fields=["employee", "program_name", "from_date", "to_date", "description"],
+        fields=["employee", "name_of_type", "from_date", "to_date", "description"],
         filters=conditions,
         order_by="from_date desc"
     )

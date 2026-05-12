@@ -14,7 +14,7 @@
   {
    "fieldname": "type_name",
    "fieldtype": "Data",
-   "label": "Type Name",
+   "label": "Name",
    "unique": 1
   },
   {
@@ -31,12 +31,13 @@
   }
  ],
  "grid_page_length": 50,
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-21 09:59:26.681163",
+ "modified": "2026-05-12 22:19:30.136956",
  "modified_by": "Administrator",
  "module": "Slis App",
- "name": "Name Of Type",
+ "name": "Department Programs Names",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

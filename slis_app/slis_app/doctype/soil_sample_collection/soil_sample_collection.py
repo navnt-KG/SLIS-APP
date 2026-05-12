@@ -124,27 +124,33 @@ import frappe
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 
+
 class SoilSampleCollection(Document):
+
     def autoname(self):
+
         # --- Administrator Bypass ---
         if frappe.session.user == "Administrator":
             self.name = make_autoname("ADM-SSC-.#####")
             return
 
-        # 1. Basic Validations
-        # 1. Basic Validations
+        # Basic Validations
         if not self.client_type:
             frappe.throw("Client Type is required for naming.")
 
-# reference_name required only for some types
+        # reference_name required only for some types
         if self.client_type in ["Farmer", "Consultancy"] and not self.reference_name:
             frappe.throw("Reference Name is required for this Client Type.")
 
-        # 2. Map Client Type to Prefix
-        prefix_map = {"Farmer": "FS", "Department": "DS", "Consultancy": "CS"}
+        # Client Type Prefix
+        prefix_map = {
+            "Farmer": "FS",
+            "Department": "DS",
+            "Consultancy": "CS"
+        }
+
         prefix = prefix_map.get(self.client_type, "SS")
 
-        # 3. Define Combined Mappings
         # Lab Mappings
         lab_map = {
             "Hi-Tech Soil Analytical Lab WYD": "WYD",
@@ -155,58 +161,66 @@ class SoilSampleCollection(Document):
             "Soil and Plant Health Clinic, Pathanamthitta": "PTA",
             "Central Soil Analytical Lab, Parottukonam": "TVM"
         }
-        
+
         # District Office Mappings
         district_map = {
-            "Trivandrum": "TVC", 
-            "Kollam": "QLN", 
+            "Trivandrum": "TVC",
+            "Kollam": "QLN",
             "Pathanamthitta": "PTA",
-            "Alappuzha": "ALP", 
-            "Kottayam": "KTM", 
+            "Alappuzha": "ALP",
+            "Kottayam": "KTM",
             "Idukki": "IDU",
-            "Ernakulam": "ERS", 
-            "Thrissur": "TSR", 
+            "Ernakulam": "ERS",
+            "Thrissur": "TSR",
             "Palakad": "PGT",
-            "Malappuram": "MLP", 
-            "Kozhikode": "KZK", 
+            "Malappuram": "MLP",
+            "Kozhikode": "KZK",
             "Wayanad": "WAY",
-            "Kannur": "CAN", 
+            "Kannur": "CAN",
             "Kasaragod": "KGQ"
         }
 
-        # 4. Fetch Employee Data
+        # Fetch Employee Data
         employee_data = frappe.db.get_value(
-            "Employee", 
-            {"user_id": frappe.session.user}, 
-            ["custom_lab_name", "custom_district_office_name"], 
+            "Employee",
+            {"user_id": frappe.session.user},
+            ["custom_lab_name", "custom_district_office_name"],
             as_dict=True
         )
-        
-        if not employee_data:
-            frappe.throw(f"User {frappe.session.user} is not linked to an Employee record.")
 
-        # 5. Determine Lab/District Code
+        if not employee_data:
+            frappe.throw(
+                f"User {frappe.session.user} is not linked to an Employee record."
+            )
+
+        # Determine Lab/District Code
         lab_code = None
-        
+
         # Check Lab Name first
         if employee_data.custom_lab_name:
             lab_code = lab_map.get(employee_data.custom_lab_name)
-        
-        # If no Lab Code found, fallback to District Office Name
+
+        # Fallback to District Office
         if not lab_code and employee_data.custom_district_office_name:
-            lab_code = district_map.get(employee_data.custom_district_office_name)
+            lab_code = district_map.get(
+                employee_data.custom_district_office_name
+            )
 
         if not lab_code:
-            frappe.throw("Neither a valid Lab nor a District Office was found for your Employee record.")
+            frappe.throw(
+                "Neither a valid Lab nor a District Office was found for your Employee record."
+            )
 
-        # 6. Process Reference Name and Generate Final Name
-        # 6. Process Reference Name and Generate Final Name
-
+        # Generate Final Name
         if self.reference_name:
             ref = self.reference_name.strip().upper().replace(" ", "-")
-            self.name = make_autoname(f"{prefix}-{lab_code}-{ref}-.#####")
+            self.name = make_autoname(
+                f"{prefix}-{lab_code}-{ref}-.#####"
+            )
         else:
-            self.name = make_autoname(f"{prefix}-{lab_code}-.#####")
+            self.name = make_autoname(
+                f"{prefix}-{lab_code}-.#####"
+            )
 
     def validate(self):
 
@@ -218,20 +232,23 @@ class SoilSampleCollection(Document):
 
             if "PSC Officer" in roles:
 
-                if self.employee_type == "Lab":
-                    frappe.throw("PSC Officer cannot edit Lab records")
-
                 old_doc = self.get_doc_before_save()
 
-                previous_status = ""
+                # Allow if new unsaved document
+                if not old_doc:
+                    return
 
-                if old_doc:
-                    previous_status = old_doc.status
+                previous_status = old_doc.status or ""
 
-                if (previous_status or "").strip() not in [
+                # Allow only these statuses
+                allowed_status = [
                     "With PSC Officer",
                     "Returned to PSC Officer (Overload)"
-                ]:
+                ]
+
+                if previous_status.strip() not in allowed_status:
                     frappe.throw(
-                        "Edit allowed only when status is 'With PSC Officer' or 'Returned to PSC Officer (Overload)'"
+                        "PSC Officer can edit only when status is "
+                        "'With PSC Officer' or "
+                        "'Returned to PSC Officer (Overload)'"
                     )

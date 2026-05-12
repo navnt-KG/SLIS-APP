@@ -196,7 +196,7 @@ frappe.ui.form.on("Soil Sample Collection", {
 
  // ✅ MOVE TO TEST BUTTON
 
- if (!frm.is_new()) {
+ if (!frm.is_new()&&frm.doc.status === "With Research Assistant") {
 
 
 

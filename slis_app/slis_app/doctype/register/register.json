@@ -12,7 +12,7 @@
   "plot_size",
   "section_break_sycb",
   "client_type",
-  "name_of_type",
+  "program_name",
   "number_of_samples",
   "register_sample_data",
   "lab_code_prefix",
@@ -66,9 +66,9 @@
   },
   {
    "depends_on": "eval:doc.client_type == 'Department'",
-   "fieldname": "name_of_type",
+   "fieldname": "program_name",
    "fieldtype": "Data",
-   "label": "Name of Type"
+   "label": "Program Name"
   },
   {
    "fieldname": "number_of_samples",

@@ -136,14 +136,14 @@
    "fieldname": "custom_name_of_type",
    "fieldtype": "Link",
    "label": "Program Name",
-   "options": "Name Of Type"
+   "options": "Department Programs Names"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-05 15:19:15.506873",
+ "modified": "2026-05-12 22:20:38.196506",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Clients",

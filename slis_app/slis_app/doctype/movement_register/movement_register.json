@@ -10,6 +10,7 @@
   "employee",
   "employee_name",
   "program_name",
+  "lab_name",
   "column_break_tpiy",
   "from_date",
   "to_date",
@@ -65,13 +66,19 @@
    "fieldtype": "Select",
    "label": "Naming Series",
    "options": "MR/.YYYY./.####."
+  },
+  {
+   "fieldname": "lab_name",
+   "fieldtype": "Link",
+   "label": "Lab Name",
+   "options": "Soil Laboratory"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-13 16:29:20.115350",
+ "modified": "2026-05-12 11:49:16.201536",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Movement Register",

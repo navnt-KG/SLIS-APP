@@ -8,7 +8,8 @@
  "field_order": [
   "sample_id",
   "values_json",
-  "lab_code"
+  "lab_code",
+  "reference_name"
  ],
  "fields": [
   {
@@ -25,13 +26,18 @@
    "fieldname": "lab_code",
    "fieldtype": "Data",
    "label": "Lab Code"
+  },
+  {
+   "fieldname": "reference_name",
+   "fieldtype": "Data",
+   "label": "Reference Name"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-04-27 14:39:47.820138",
+ "modified": "2026-05-12 14:52:09.008646",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Sample Data",
