@@ -143,73 +143,268 @@ class Clients(Document):
 
 
 
-#user permision to only see the clients created by their lab or district office
+# #user permision to only see the clients created by their lab or district office
 
+# import frappe
+
+# def get_permission_query_conditions(user):
+#     if not user:
+#         user = frappe.session.user
+
+#     # Full access for Administrator
+#     if user == "Administrator":
+#         return ""
+
+#     employee = frappe.db.get_value(
+#         "Employee",
+#         {"user_id": user},
+#         ["employment_type", "custom_lab_name", "custom_district_office_name"],
+#         as_dict=True
+#     )
+
+#     if not employee:
+#         return "1=0"
+
+#     # District Office user
+#     if employee.employment_type == "District Office" and employee.custom_district_office_name:
+#         dept = frappe.db.escape(employee.custom_district_office_name)
+#         return f"`tabClients`.`custom_collection_department` = {dept}"
+
+#     # Lab user
+#     if employee.employment_type == "Lab" and employee.custom_lab_name:
+#         lab = frappe.db.escape(employee.custom_lab_name)
+#         return f"`tabClients`.`login_lab_name` = {lab}"
+
+#     return "1=0"
+
+
+# def has_permission(doc, user=None):
+#     if not user:
+#         user = frappe.session.user
+
+#     # Admin full access
+#     if user == "Administrator":
+#         return True
+
+#     # ✅ Allow creation safely
+#     if doc.is_new():
+#         return True
+
+#     employee = frappe.db.get_value(
+#         "Employee",
+#         {"user_id": user},
+#         ["employment_type", "custom_lab_name", "custom_district_office_name"],
+#         as_dict=True
+#     )
+
+#     if not employee:
+#         return False
+
+#     # District Office user
+#     if employee.employment_type == "District Office":
+#         if not employee.custom_district_office_name:
+#             return False
+#         return doc.custom_collection_department == employee.custom_district_office_name
+
+#     # Lab user
+#     if employee.employment_type == "Lab":
+#         if not employee.custom_lab_name:
+#             return False
+#         return doc.login_lab_name == employee.custom_lab_name
+
+#     return False
+
+
+#other code 
 import frappe
 
+
+# =====================================================
+# LIST VIEW PERMISSION FILTER
+# =====================================================
+
 def get_permission_query_conditions(user):
+
     if not user:
         user = frappe.session.user
 
-    # Full access for Administrator
+    # Administrator full access
     if user == "Administrator":
         return ""
 
-    employee = frappe.db.get_value(
+    employee = frappe.get_all(
         "Employee",
-        {"user_id": user},
-        ["employment_type", "custom_lab_name", "custom_district_office_name"],
-        as_dict=True
+        filters={
+            "user_id": user
+        },
+        fields=[
+            "employment_type",
+            "custom_lab_name",
+            "custom_district_office_name"
+        ],
+        limit=1
     )
 
     if not employee:
         return "1=0"
 
-    # District Office user
-    if employee.employment_type == "District Office" and employee.custom_district_office_name:
-        dept = frappe.db.escape(employee.custom_district_office_name)
-        return f"`tabClients`.`custom_collection_department` = {dept}"
+    employee = employee[0]
 
-    # Lab user
-    if employee.employment_type == "Lab" and employee.custom_lab_name:
-        lab = frappe.db.escape(employee.custom_lab_name)
-        return f"`tabClients`.`login_lab_name` = {lab}"
+    # =========================
+    # DISTRICT OFFICE USER
+    # =========================
+
+    if (
+        employee.get("employment_type") == "District Office"
+        and employee.get("custom_district_office_name")
+    ):
+
+        dept = frappe.db.escape(
+            employee.get("custom_district_office_name")
+        )
+
+        return (
+            f"`tabClients`.`custom_collection_department` = {dept}"
+        )
+
+    # =========================
+    # LAB USER
+    # =========================
+
+    if (
+        employee.get("employment_type") == "Lab"
+        and employee.get("custom_lab_name")
+    ):
+
+        lab = frappe.db.escape(
+            employee.get("custom_lab_name")
+        )
+
+        return (
+            f"`tabClients`.`login_lab_name` = {lab}"
+        )
 
     return "1=0"
 
 
+# =====================================================
+# DOCUMENT LEVEL PERMISSION
+# =====================================================
+
 def has_permission(doc, user=None):
+
     if not user:
         user = frappe.session.user
 
-    # Admin full access
+    # Administrator full access
     if user == "Administrator":
         return True
 
-    # ✅ Allow creation safely
+    # Allow new document creation
     if doc.is_new():
         return True
 
-    employee = frappe.db.get_value(
+    employee = frappe.get_all(
         "Employee",
-        {"user_id": user},
-        ["employment_type", "custom_lab_name", "custom_district_office_name"],
-        as_dict=True
+        filters={
+            "user_id": user
+        },
+        fields=[
+            "employment_type",
+            "custom_lab_name",
+            "custom_district_office_name"
+        ],
+        limit=1
     )
 
     if not employee:
         return False
 
-    # District Office user
-    if employee.employment_type == "District Office":
-        if not employee.custom_district_office_name:
-            return False
-        return doc.custom_collection_department == employee.custom_district_office_name
+    employee = employee[0]
 
-    # Lab user
-    if employee.employment_type == "Lab":
-        if not employee.custom_lab_name:
+    # =========================
+    # DISTRICT OFFICE USER
+    # =========================
+
+    if employee.get("employment_type") == "District Office":
+
+        if not employee.get(
+            "custom_district_office_name"
+        ):
             return False
-        return doc.login_lab_name == employee.custom_lab_name
+
+        return (
+            (doc.custom_collection_department or "")
+            ==
+            employee.get(
+                "custom_district_office_name"
+            )
+        )
+
+    # =========================
+    # LAB USER
+    # =========================
+
+    if employee.get("employment_type") == "Lab":
+
+        if not employee.get("custom_lab_name"):
+            return False
+
+        return (
+            (doc.login_lab_name or "")
+            ==
+            employee.get("custom_lab_name")
+        )
 
     return False
+
+
+# =====================================================
+# BEFORE INSERT
+# =====================================================
+
+def before_insert(doc, method=None):
+
+    employee = frappe.get_all(
+        "Employee",
+        filters={
+            "user_id": frappe.session.user
+        },
+        fields=[
+            "employment_type",
+            "custom_lab_name",
+            "custom_district_office_name"
+        ],
+        limit=1
+    )
+
+    if not employee:
+        return
+
+    employee = employee[0]
+
+    # =========================
+    # LAB USER
+    # =========================
+
+    if employee.get("employment_type") == "Lab":
+
+        doc.login_lab_name = (
+            employee.get("custom_lab_name") or ""
+        )
+
+        doc.custom_collection_department = ""
+
+    # =========================
+    # DISTRICT OFFICE USER
+    # =========================
+
+    elif employee.get("employment_type") == "District Office":
+
+        doc.custom_collection_department = (
+            employee.get(
+                "custom_district_office_name"
+            ) or ""
+        )
+
+        doc.login_lab_name = ""

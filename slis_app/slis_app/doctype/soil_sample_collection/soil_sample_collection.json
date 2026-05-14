@@ -665,8 +665,7 @@
   {
    "depends_on": "eval:doc.client_type != 'Farmer'",
    "fieldname": "department_details_section",
-   "fieldtype": "Section Break",
-   "label": "Department Details"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "district_name",
@@ -754,7 +753,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-12 15:29:56.192403",
+ "modified": "2026-05-14 15:07:48.991695",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

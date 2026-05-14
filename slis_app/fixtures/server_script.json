@@ -226,5 +226,24 @@
   "reference_doctype": "Soil Test Result",
   "script": "# Build a map of old temp names → new real names isn't possible server side\n# Instead, re-link variable_inputs using test_item as the stable key\n\nresult_map = {}\nfor row in doc.results_table:\n    result_map[row.test_item] = row.name\n\nfor var_row in doc.variable_inputs:\n    if var_row.test_item and var_row.test_item in result_map:\n        correct_parent = result_map[var_row.test_item]\n        if var_row.parent_test_row != correct_parent:\n            var_row.parent_test_row = correct_parent",
   "script_type": "DocType Event"
+ },
+ {
+  "allow_guest": 0,
+  "api_method": null,
+  "cron_format": null,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Server Script",
+  "doctype_event": "Before Insert",
+  "enable_rate_limit": 0,
+  "event_frequency": "All",
+  "modified": "2026-05-13 17:07:08.754002",
+  "module": "Slis App",
+  "name": "User List Permisssion",
+  "rate_limit_count": 5,
+  "rate_limit_seconds": 86400,
+  "reference_doctype": "User",
+  "script": "user = frappe.session.user\n\n# Administrator full access\nif user == \"Administrator\":\n    conditions = \"\"\n\nelse:\n\n    # Get logged-in user's employee details\n    emp = frappe.db.get_value(\n        \"Employee\",\n        {\"user_id\": user},\n        [\n            \"designation\",\n            \"employment_type\",\n            \"custom_lab_name\",\n            \"custom_district_office_name\"\n        ],\n        as_dict=True\n    )\n\n    # No employee linked\n    if not emp:\n        conditions = \"1=0\"\n\n    else:\n\n        designation = emp.designation or \"\"\n        employment_type = emp.employment_type or \"\"\n\n        # FULL ACCESS DESIGNATIONS\n        full_access_designations = [\n            \"PSC Officer\",\n            \"Managing Director\",\n            \"Additional Director\",\n            \"Joint Director\",\n            \"Director\"\n        ]\n\n        # FULL USER LIST\n        if designation in full_access_designations:\n            conditions = \"\"\n\n        # SENIOR CHEMIST -> SAME LAB USERS\n        elif designation == \"Senior Chemist\":\n\n            employees = frappe.get_all(\n                \"Employee\",\n                filters={\n                    \"custom_lab_name\": emp.custom_lab_name\n                },\n                pluck=\"user_id\"\n            )\n\n            users = [u for u in employees if u]\n\n            if users:\n                users = \"', '\".join(users)\n                conditions = (\n                    f\"`tabUser`.`name` IN ('{users}')\"\n                )\n            else:\n                conditions = \"1=0\"\n\n        # ASSISTANT DIRECTOR -> SAME DISTRICT OFFICE USERS\n        elif designation == \"Assistant Director\":\n\n            employees = frappe.get_all(\n                \"Employee\",\n                filters={\n                    \"custom_district_office_name\":\n                    emp.custom_district_office_name\n                },\n                pluck=\"user_id\"\n            )\n\n            users = [u for u in employees if u]\n\n            if users:\n                users = \"', '\".join(users)\n                conditions = (\n                    f\"`tabUser`.`name` IN ('{users}')\"\n                )\n            else:\n                conditions = \"1=0\"\n\n        # OTHER DESIGNATIONS -> ONLY OWN USER\n        else:\n\n            conditions = (\n                f\"`tabUser`.`name` = '{user}'\"\n            )",
+  "script_type": "Permission Query"
  }
 ]
