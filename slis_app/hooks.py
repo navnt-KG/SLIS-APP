@@ -328,3 +328,78 @@ fixtures = [
 
     }
 ]
+
+
+
+
+# generic hooks
+
+
+fixtures = [
+
+    # =========================
+    # WORKSPACES
+    # =========================
+    {
+        "dt": "Workspace",
+        "filters": [
+            ["module", "=", "Slis App"]
+        ]
+    },
+
+    # =========================
+    # CLIENT / SERVER SCRIPTS
+    # =========================
+    {
+        "dt": "Client Script",
+        "filters": [
+            ["module", "=", "Slis App"]
+        ]
+    },
+
+    {
+        "dt": "Server Script",
+        "filters": [
+            ["module", "=", "Slis App"]
+        ]
+    },
+
+    # =========================
+    # REPORTS
+    # =========================
+    {
+        "dt": "Report",
+        "filters": [
+            ["module", "=", "Slis App"]
+        ]
+    },
+
+    # =========================
+    # DASHBOARDS / CHARTS
+    # =========================
+    {
+        "dt": "Dashboard Chart",
+        "filters": [
+            ["module", "=", "Slis App"]
+        ]
+    },
+
+    {
+        "dt": "Number Card",
+        "filters": [
+            ["module", "=", "Slis App"]
+        ]
+    },
+
+
+    # =========================
+    # CUSTOMIZATION
+    # =========================
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["module", "=", "Slis App"]
+        ]
+    }
+
+]

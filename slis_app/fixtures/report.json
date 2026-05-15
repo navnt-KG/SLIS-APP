@@ -1,0 +1,298 @@
+[
+ {
+  "add_total_row": 0,
+  "add_translate_data": 0,
+  "columns": [],
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Report",
+  "filters": [],
+  "is_standard": "Yes",
+  "javascript": null,
+  "json": null,
+  "letter_head": null,
+  "modified": "2026-03-12 12:01:16.794430",
+  "module": "Slis App",
+  "name": "Narrative Progress Report",
+  "prepared_report": 0,
+  "query": null,
+  "ref_doctype": "Soil Sample Collection",
+  "reference_report": null,
+  "report_name": "Narrative Progress Report",
+  "report_script": null,
+  "report_type": "Script Report",
+  "roles": [
+   {
+    "parent": "Narrative Progress Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Managing Director"
+   },
+   {
+    "parent": "Narrative Progress Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Administrator"
+   }
+  ],
+  "timeout": 0
+ },
+ {
+  "add_total_row": 0,
+  "add_translate_data": 0,
+  "columns": [],
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Report",
+  "filters": [
+   {
+    "default": null,
+    "fieldname": "from_date",
+    "fieldtype": "Date",
+    "label": "From Date",
+    "mandatory": 0,
+    "options": null,
+    "parent": "Sample Status",
+    "parentfield": "filters",
+    "parenttype": "Report",
+    "wildcard_filter": 0
+   },
+   {
+    "default": null,
+    "fieldname": "to_date",
+    "fieldtype": "Date",
+    "label": "To Date",
+    "mandatory": 0,
+    "options": null,
+    "parent": "Sample Status",
+    "parentfield": "filters",
+    "parenttype": "Report",
+    "wildcard_filter": 0
+   }
+  ],
+  "is_standard": "Yes",
+  "javascript": null,
+  "json": null,
+  "letter_head": null,
+  "modified": "2026-04-15 22:57:07.366370",
+  "module": "Slis App",
+  "name": "Sample Status",
+  "prepared_report": 0,
+  "query": "SELECT \n    CASE \n        WHEN status = 'Completed' THEN 'Completed'\n        ELSE 'Pending'\n    END as status_category,\n    COUNT(name) as total_samples\nFROM \n    `tabSoil Sample Collection`\nWHERE \n    status != 'Draft'\nGROUP BY \n    status_category;",
+  "ref_doctype": "Soil Sample Collection",
+  "reference_report": null,
+  "report_name": "Sample Status",
+  "report_script": "\ndef execute(filters=None):\n    # 1. Define the columns. We use \"html\" fieldtype for the count to make it a link.\n    columns = [\n        {\"label\": \"Status Category\", \"fieldname\": \"status_category\", \"fieldtype\": \"Data\", \"width\": 200},\n        {\"label\": \"Total Samples\", \"fieldname\": \"total_samples\", \"fieldtype\": \"html\", \"width\": 150}\n    ]\n\n    # 2. Get the counts from the database\n    # Count Completed\n    completed_count = frappe.db.count(\"Soil Sample Collection\", filters={\"status\": \"Completed\"})\n    \n    # Count Pending (Everything except Completed and Draft)\n    pending_count = frappe.db.count(\"Soil Sample Collection\", filters={\n        \"status\": [\"not in\", [\"Completed\", \"Draft\"]]\n    })\n\n    # 3. Create the Links\n    # This URL opens the list view with a filter applied\n    completed_link = f'<a href=\"/app/soil-sample-collection?status=Completed\"><b>{completed_count}</b></a>'\n    \n    # This URL uses a JSON-style filter for multiple \"Pending\" statuses\n    pending_url = '/app/soil-sample-collection?status=[\"not in\", [\"Completed\", \"Draft\"]]'\n    pending_link = f'<a href=\\'{pending_url}\\'><b>{pending_count}</b></a>'\n\n    # 4. Format the data for the report table\n    data = [\n        {\n            \"status_category\": \"Completed\",\n            \"total_samples\": completed_link\n        },\n        {\n            \"status_category\": \"Pending\",\n            \"total_samples\": pending_link\n        }\n    ]\n\n    return columns, data",
+  "report_type": "Script Report",
+  "roles": [
+   {
+    "parent": "Sample Status",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "System Manager"
+   },
+   {
+    "parent": "Sample Status",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Creator"
+   },
+   {
+    "parent": "Sample Status",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Managing Director"
+   }
+  ],
+  "timeout": 0
+ },
+ {
+  "add_total_row": 0,
+  "add_translate_data": 0,
+  "columns": [],
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Report",
+  "filters": [],
+  "is_standard": "Yes",
+  "javascript": null,
+  "json": null,
+  "letter_head": null,
+  "modified": "2026-03-08 13:55:02.764877",
+  "module": "Slis App",
+  "name": "Assignment Pending Report",
+  "prepared_report": 0,
+  "query": null,
+  "ref_doctype": "Soil Sample Collection",
+  "reference_report": null,
+  "report_name": "Assignment Pending Report",
+  "report_script": null,
+  "report_type": "Script Report",
+  "roles": [
+   {
+    "parent": "Assignment Pending Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "System Manager"
+   },
+   {
+    "parent": "Assignment Pending Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Creator"
+   },
+   {
+    "parent": "Assignment Pending Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Managing Director"
+   }
+  ],
+  "timeout": 0
+ },
+ {
+  "add_total_row": 0,
+  "add_translate_data": 0,
+  "columns": [],
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Report",
+  "filters": [],
+  "is_standard": "Yes",
+  "javascript": null,
+  "json": null,
+  "letter_head": null,
+  "modified": "2026-03-16 12:19:08.918445",
+  "module": "Slis App",
+  "name": "RA Wise Report",
+  "prepared_report": 0,
+  "query": null,
+  "ref_doctype": "Soil Sample Collection",
+  "reference_report": null,
+  "report_name": "RA Wise Report",
+  "report_script": null,
+  "report_type": "Script Report",
+  "roles": [
+   {
+    "parent": "RA Wise Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Managing Director"
+   },
+   {
+    "parent": "RA Wise Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "System Manager"
+   }
+  ],
+  "timeout": 0
+ },
+ {
+  "add_total_row": 0,
+  "add_translate_data": 0,
+  "columns": [],
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Report",
+  "filters": [],
+  "is_standard": "Yes",
+  "javascript": null,
+  "json": null,
+  "letter_head": null,
+  "modified": "2026-03-08 13:33:53.746173",
+  "module": "Slis App",
+  "name": "Employee Movement Register Report",
+  "prepared_report": 0,
+  "query": null,
+  "ref_doctype": "Movement Register",
+  "reference_report": null,
+  "report_name": "Employee Movement Register Report",
+  "report_script": null,
+  "report_type": "Script Report",
+  "roles": [
+   {
+    "parent": "Employee Movement Register Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "System Manager"
+   },
+   {
+    "parent": "Employee Movement Register Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Managing Director"
+   }
+  ],
+  "timeout": 0
+ },
+ {
+  "add_total_row": 0,
+  "add_translate_data": 0,
+  "columns": [],
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Report",
+  "filters": [],
+  "is_standard": "Yes",
+  "javascript": null,
+  "json": "{}",
+  "letter_head": null,
+  "modified": "2026-03-08 12:35:51.877814",
+  "module": "Slis App",
+  "name": "Soil Sample Client Summary",
+  "prepared_report": 0,
+  "query": null,
+  "ref_doctype": "Soil Sample Collection",
+  "reference_report": null,
+  "report_name": "Soil Sample Client Summary",
+  "report_script": null,
+  "report_type": "Script Report",
+  "roles": [],
+  "timeout": 0
+ },
+ {
+  "add_total_row": 0,
+  "add_translate_data": 0,
+  "columns": [],
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Report",
+  "filters": [],
+  "is_standard": "Yes",
+  "javascript": null,
+  "json": null,
+  "letter_head": null,
+  "modified": "2026-03-08 12:41:10.885381",
+  "module": "Slis App",
+  "name": "Soil Sample Scheme Summary",
+  "prepared_report": 0,
+  "query": null,
+  "ref_doctype": "Soil Sample Collection",
+  "reference_report": null,
+  "report_name": "Soil Sample Scheme Summary",
+  "report_script": null,
+  "report_type": "Script Report",
+  "roles": [
+   {
+    "parent": "Soil Sample Scheme Summary",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "System Manager"
+   },
+   {
+    "parent": "Soil Sample Scheme Summary",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Creator"
+   },
+   {
+    "parent": "Soil Sample Scheme Summary",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Managing Director"
+   }
+  ],
+  "timeout": 0
+ }
+]
