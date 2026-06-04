@@ -7,10 +7,10 @@
  "docstatus": 0,
  "doctype": "Report",
  "filters": [],
- "idx": 0,
+ "idx": 2,
  "is_standard": "Yes",
  "letter_head": null,
- "modified": "2026-03-08 13:55:02.764877",
+ "modified": "2026-05-25 14:41:10.517829",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Assignment Pending Report",
@@ -21,28 +21,10 @@
  "report_type": "Script Report",
  "roles": [
   {
-   "role": "System Manager"
+   "role": "Soil Intaker L1"
   },
   {
-   "role": "Creator"
-  },
-  {
-   "role": "Lab Assistant"
-  },
-  {
-   "role": "Managing Director"
-  },
-  {
-   "role": "Assistant Director"
-  },
-  {
-   "role": "Research Assistant"
-  },
-  {
-   "role": "PSC Officer"
-  },
-  {
-   "role": "Senior Chemist"
+   "role": "slis_admin"
   }
  ],
  "timeout": 0

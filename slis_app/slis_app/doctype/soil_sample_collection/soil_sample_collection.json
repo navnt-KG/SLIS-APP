@@ -23,9 +23,11 @@
   "contact_number",
   "id_proof",
   "aadhar_card_number",
+  "moved_to_test",
   "column_break_nxzn",
   "consultancy_type",
   "status",
+  "sample_id",
   "section_break_scjx",
   "type_of_collection",
   "department_details_section",
@@ -40,6 +42,8 @@
   "collection_date",
   "total_parameter_count",
   "html",
+  "is_variant",
+  "variant_of",
   "section_break_usar",
   "sample_data",
   "sample_related_section",
@@ -96,6 +100,7 @@
   "common_section",
   "lab_register_created",
   "allow_send_back_reason",
+  "verified_physical_sample",
   "psc_entry_target_lab",
   "lab_name",
   "district_office_name",
@@ -711,7 +716,6 @@
   {
    "fieldname": "sample_data",
    "fieldtype": "Table",
-   "hidden": 1,
    "label": "Sample Data",
    "options": "Sample Data"
   },
@@ -748,12 +752,43 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Payment Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_variant",
+   "fieldtype": "Check",
+   "label": "Is Variant"
+  },
+  {
+   "fieldname": "variant_of",
+   "fieldtype": "Link",
+   "label": "Variant Of",
+   "options": "Soil Sample Collection"
+  },
+  {
+   "fieldname": "sample_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Sample ID"
+  },
+  {
+   "default": "0",
+   "fieldname": "moved_to_test",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Moved to Test"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_physical_sample",
+   "fieldtype": "Check",
+   "label": "Verified Physical Sample"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-14 15:07:48.991695",
+ "modified": "2026-06-04 13:05:40.365941",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

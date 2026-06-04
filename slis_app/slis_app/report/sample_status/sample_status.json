@@ -25,7 +25,7 @@
  "idx": 2,
  "is_standard": "Yes",
  "letter_head": null,
- "modified": "2026-04-15 22:57:07.366370",
+ "modified": "2026-05-25 14:38:24.984074",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Sample Status",
@@ -38,28 +38,10 @@
  "report_type": "Script Report",
  "roles": [
   {
-   "role": "System Manager"
+   "role": "Soil Intaker L1"
   },
   {
-   "role": "Creator"
-  },
-  {
-   "role": "Lab Assistant"
-  },
-  {
-   "role": "Managing Director"
-  },
-  {
-   "role": "Assistant Director"
-  },
-  {
-   "role": "Research Assistant"
-  },
-  {
-   "role": "PSC Officer"
-  },
-  {
-   "role": "Senior Chemist"
+   "role": "slis_admin"
   }
  ],
  "timeout": 0

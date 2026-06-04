@@ -706,12 +706,12 @@ def generate_html(
     }
 
     .ra-cell{
-        background:#e3f2fd;
+        background:transparent;
         font-weight:bold;
     }
 
     .total-cell{
-        background:#f1f8e9;
+        background:transparent;
         font-weight:bold;
     }
 

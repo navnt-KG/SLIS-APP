@@ -11,7 +11,7 @@
   "javascript": null,
   "json": null,
   "letter_head": null,
-  "modified": "2026-03-12 12:01:16.794430",
+  "modified": "2026-05-25 14:38:57.995296",
   "module": "Slis App",
   "name": "Narrative Progress Report",
   "prepared_report": 0,
@@ -26,13 +26,13 @@
     "parent": "Narrative Progress Report",
     "parentfield": "roles",
     "parenttype": "Report",
-    "role": "Managing Director"
+    "role": "Soil Intaker L1"
    },
    {
     "parent": "Narrative Progress Report",
     "parentfield": "roles",
     "parenttype": "Report",
-    "role": "Administrator"
+    "role": "slis_admin"
    }
   ],
   "timeout": 0
@@ -74,7 +74,7 @@
   "javascript": null,
   "json": null,
   "letter_head": null,
-  "modified": "2026-04-15 22:57:07.366370",
+  "modified": "2026-05-25 14:38:24.984074",
   "module": "Slis App",
   "name": "Sample Status",
   "prepared_report": 0,
@@ -89,19 +89,13 @@
     "parent": "Sample Status",
     "parentfield": "roles",
     "parenttype": "Report",
-    "role": "System Manager"
+    "role": "Soil Intaker L1"
    },
    {
     "parent": "Sample Status",
     "parentfield": "roles",
     "parenttype": "Report",
-    "role": "Creator"
-   },
-   {
-    "parent": "Sample Status",
-    "parentfield": "roles",
-    "parenttype": "Report",
-    "role": "Managing Director"
+    "role": "slis_admin"
    }
   ],
   "timeout": 0
@@ -118,7 +112,7 @@
   "javascript": null,
   "json": null,
   "letter_head": null,
-  "modified": "2026-03-08 13:55:02.764877",
+  "modified": "2026-05-25 14:41:10.517829",
   "module": "Slis App",
   "name": "Assignment Pending Report",
   "prepared_report": 0,
@@ -133,19 +127,13 @@
     "parent": "Assignment Pending Report",
     "parentfield": "roles",
     "parenttype": "Report",
-    "role": "System Manager"
+    "role": "Soil Intaker L1"
    },
    {
     "parent": "Assignment Pending Report",
     "parentfield": "roles",
     "parenttype": "Report",
-    "role": "Creator"
-   },
-   {
-    "parent": "Assignment Pending Report",
-    "parentfield": "roles",
-    "parenttype": "Report",
-    "role": "Managing Director"
+    "role": "slis_admin"
    }
   ],
   "timeout": 0
@@ -200,7 +188,7 @@
   "javascript": null,
   "json": null,
   "letter_head": null,
-  "modified": "2026-03-08 13:33:53.746173",
+  "modified": "2026-05-25 14:39:46.641518",
   "module": "Slis App",
   "name": "Employee Movement Register Report",
   "prepared_report": 0,
@@ -215,13 +203,13 @@
     "parent": "Employee Movement Register Report",
     "parentfield": "roles",
     "parenttype": "Report",
-    "role": "System Manager"
+    "role": "Soil Intaker L1"
    },
    {
     "parent": "Employee Movement Register Report",
     "parentfield": "roles",
     "parenttype": "Report",
-    "role": "Managing Director"
+    "role": "slis_admin"
    }
   ],
   "timeout": 0
@@ -263,7 +251,7 @@
   "javascript": null,
   "json": null,
   "letter_head": null,
-  "modified": "2026-03-08 12:41:10.885381",
+  "modified": "2026-05-25 14:40:05.340758",
   "module": "Slis App",
   "name": "Soil Sample Scheme Summary",
   "prepared_report": 0,
@@ -278,19 +266,13 @@
     "parent": "Soil Sample Scheme Summary",
     "parentfield": "roles",
     "parenttype": "Report",
-    "role": "System Manager"
+    "role": "Soil Intaker L1"
    },
    {
     "parent": "Soil Sample Scheme Summary",
     "parentfield": "roles",
     "parenttype": "Report",
-    "role": "Creator"
-   },
-   {
-    "parent": "Soil Sample Scheme Summary",
-    "parentfield": "roles",
-    "parenttype": "Report",
-    "role": "Managing Director"
+    "role": "slis_admin"
    }
   ],
   "timeout": 0

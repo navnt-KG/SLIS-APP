@@ -451,98 +451,329 @@ def get_session_two_data(ra=False, user=None):
 # ======================================================
 # HTML
 # ======================================================
+# ======================================================
+# HTML
+# ======================================================
 def build_html(c1, d1, c2, d2, ra=False):
 
     html = """
     <style>
-    .box{overflow-x:auto;border:1px solid #ccc;margin-bottom:20px;}
-    table{border-collapse:collapse;width:100%;}
-    th,td{border:1px solid #ccc;padding:8px;text-align:center;}
-    th{background:#f5f5f5;}
+
+    .box{
+        overflow:auto;
+        border:1px solid #ccc;
+        margin-bottom:20px;
+        cursor:grab;
+        user-select:none;
+    }
+
+    .box:active{
+        cursor:grabbing;
+    }
+
+    table{
+        border-collapse:collapse;
+        width:max-content;
+        min-width:100%;
+    }
+
+    th,td{
+        border:1px solid #ccc;
+        padding:8px;
+        text-align:center;
+        white-space:nowrap;
+    }
+
+    th{
+        background:#f5f5f5;
+    }
+
     </style>
     """
 
-    # Session 1
-    html += "<h3>Narrative Progress Report</h3><div class='box'><table><tr>"
+    # ======================================================
+    # SESSION 1
+    # ======================================================
+    html += """
+    <h3>
+    Narrative Progress Report
+    </h3>
+
+    <div class='box'>
+    <table>
+    <tr>
+    """
+
     for col in c1:
-        html += f"<th>{col['label']}</th>"
+
+        html += f"""
+        <th>
+        {col['label']}
+        </th>
+        """
+
     html += "</tr>"
 
     for row in d1:
+
         html += "<tr>"
+
         for col in c1:
-            html += f"<td>{row.get(col['fieldname'], '')}</td>"
+
+            html += f"""
+            <td>
+            {row.get(col['fieldname'], '')}
+            </td>
+            """
+
         html += "</tr>"
 
-    html += "</table></div>"
+    html += """
+    </table>
+    </div>
+    """
 
-    # Session 2 — first column heading comes from c2
-    first_col_label = c2[0]["label"] if c2 else ("Name" if ra else "Lab")
+    # ======================================================
+    # SESSION 2
+    # ======================================================
+    first_col_label = (
+        c2[0]["label"]
+        if c2
+        else (
+            "Name"
+            if ra
+            else "Lab"
+        )
+    )
 
-    html += "<h3>Pending Work</h3><div class='box'><table>"
+    html += """
+    <h3>
+    Pending Work
+    </h3>
+
+    <div class='box'>
+    <table>
+    """
 
     main_headers = {}
     field_map = {}
 
     for col in c2:
+
         fname = col["fieldname"]
         label = col["label"]
 
-        if fname in ("lab_name", "total_pending"):
+        if fname in (
+            "lab_name",
+            "total_pending"
+        ):
             continue
 
         parts = label.split(" - ")
 
         if len(parts) >= 3:
+
             main = " - ".join(parts[:2])
             sub = parts[2]
+
         else:
+
             main = label
             sub = ""
 
         if main not in main_headers:
+
             main_headers[main] = []
 
         main_headers[main].append(sub)
+
         field_map[(main, sub)] = fname
 
-    order = ["Profile", "Surface"]
+    order = [
+        "Profile",
+        "Surface"
+    ]
 
     for main in main_headers:
+
         main_headers[main] = sorted(
+
             main_headers[main],
-            key=lambda x: order.index(x) if x in order else 99
+
+            key=lambda x:
+                order.index(x)
+                if x in order
+                else 99
         )
 
-    html += f"<tr><th rowspan='2'>{first_col_label}</th>"
+    html += f"""
+    <tr>
+
+    <th rowspan='2'>
+    {first_col_label}
+    </th>
+    """
 
     for main in main_headers:
-        html += f"<th colspan='{len(main_headers[main])}'>{main}</th>"
 
-    html += "<th rowspan='2'>Total Pending</th></tr>"
+        html += f"""
+        <th colspan='{
+            len(main_headers[main])
+        }'>
+        {main}
+        </th>
+        """
+
+    html += """
+    <th rowspan='2'>
+    Total Pending
+    </th>
+
+    </tr>
+    """
 
     html += "<tr>"
 
     for main in main_headers:
+
         for sub in main_headers[main]:
-            html += f"<th>{sub}</th>"
+
+            html += f"""
+            <th>
+            {sub}
+            </th>
+            """
 
     html += "</tr>"
 
     for row in d2:
+
         html += "<tr>"
 
-        html += f"<td>{row.get('lab_name', '')}</td>"
+        html += f"""
+        <td>
+        {row.get('lab_name', '')}
+        </td>
+        """
 
         for main in main_headers:
-            for sub in main_headers[main]:
-                fname = field_map.get((main, sub))
-                html += f"<td>{row.get(fname, 0)}</td>"
 
-        html += f"<td>{row.get('total_pending', 0)}</td>"
+            for sub in main_headers[main]:
+
+                fname = field_map.get(
+                    (main, sub)
+                )
+
+                html += f"""
+                <td>
+                {row.get(fname, 0)}
+                </td>
+                """
+
+        html += f"""
+        <td>
+        {row.get('total_pending', 0)}
+        </td>
+        """
 
         html += "</tr>"
 
-    html += "</table></div>"
+    html += """
+    </table>
+    </div>
+    """
+
+    # ======================================================
+    # DRAG SCROLL SCRIPT
+    # ======================================================
+    html += """
+
+    <script>
+
+    document
+        .querySelectorAll('.box')
+        .forEach(slider => {
+
+        let isDown = false;
+
+        let startX;
+        let startY;
+
+        let scrollLeft;
+        let scrollTop;
+
+        slider.addEventListener(
+            'mousedown',
+            (e) => {
+
+                isDown = true;
+
+                startX =
+                    e.pageX -
+                    slider.offsetLeft;
+
+                startY =
+                    e.pageY -
+                    slider.offsetTop;
+
+                scrollLeft =
+                    slider.scrollLeft;
+
+                scrollTop =
+                    slider.scrollTop;
+            }
+        );
+
+        slider.addEventListener(
+            'mouseleave',
+            () => {
+
+                isDown = false;
+            }
+        );
+
+        slider.addEventListener(
+            'mouseup',
+            () => {
+
+                isDown = false;
+            }
+        );
+
+        slider.addEventListener(
+            'mousemove',
+            (e) => {
+
+                if (!isDown)
+                    return;
+
+                e.preventDefault();
+
+                const x =
+                    e.pageX -
+                    slider.offsetLeft;
+
+                const y =
+                    e.pageY -
+                    slider.offsetTop;
+
+                const walkX =
+                    (x - startX) * 1.5;
+
+                const walkY =
+                    (y - startY) * 1.5;
+
+                slider.scrollLeft =
+                    scrollLeft - walkX;
+
+                slider.scrollTop =
+                    scrollTop - walkY;
+            }
+        );
+
+    });
+
+    </script>
+    """
 
     return html
