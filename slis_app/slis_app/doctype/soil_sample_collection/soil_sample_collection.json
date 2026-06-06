@@ -28,22 +28,25 @@
   "consultancy_type",
   "status",
   "sample_id",
+  "is_master_sample",
+  "is_generated_sample",
+  "parent_sample",
+  "reference_sample_id",
   "section_break_scjx",
   "type_of_collection",
   "department_details_section",
   "name_of_type",
   "district_name",
   "local_body",
-  "panchayath_name",
   "block_name",
-  "lab_code_prefix",
-  "lab_code_start",
+  "panchayath_name",
   "number_of_samples",
   "collection_date",
-  "total_parameter_count",
   "html",
-  "is_variant",
-  "variant_of",
+  "column_break_dxcw",
+  "lab_code_prefix",
+  "lab_code_start",
+  "total_parameter_count",
   "section_break_usar",
   "sample_data",
   "sample_related_section",
@@ -651,7 +654,8 @@
   {
    "fieldname": "total_parameter_count",
    "fieldtype": "Int",
-   "label": "Total Parameter Count"
+   "label": "Total Parameter Count",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_rntr",
@@ -754,18 +758,6 @@
    "label": "Payment Details"
   },
   {
-   "default": "0",
-   "fieldname": "is_variant",
-   "fieldtype": "Check",
-   "label": "Is Variant"
-  },
-  {
-   "fieldname": "variant_of",
-   "fieldtype": "Link",
-   "label": "Variant Of",
-   "options": "Soil Sample Collection"
-  },
-  {
    "fieldname": "sample_id",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -783,12 +775,39 @@
    "fieldname": "verified_physical_sample",
    "fieldtype": "Check",
    "label": "Verified Physical Sample"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_master_sample",
+   "fieldtype": "Check",
+   "label": "Is Master Sample"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_generated_sample",
+   "fieldtype": "Check",
+   "label": "Is Generated Sample"
+  },
+  {
+   "fieldname": "parent_sample",
+   "fieldtype": "Link",
+   "label": "Parent Sample",
+   "options": "Soil Sample Collection"
+  },
+  {
+   "fieldname": "reference_sample_id",
+   "fieldtype": "Data",
+   "label": "Reference Sample Id"
+  },
+  {
+   "fieldname": "column_break_dxcw",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-04 13:05:40.365941",
+ "modified": "2026-06-06 14:42:35.423334",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

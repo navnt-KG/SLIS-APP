@@ -1,9 +1,6 @@
-# Copyright (c) 2026, navaneeth and contributors
-# For license information, please see license.txt
-
-# import frappe
 
 import frappe
+import json
 from frappe.model.document import Document
 
 
@@ -34,11 +31,47 @@ class BulkResultEntry(Document):
                         == bulk_row.sample_id
                     ):
 
-                        test_row.values_json = (
-                            bulk_row.values_json
-                        )
+                        try:
 
-                        updated = True
+                            bulk_data = json.loads(
+                                bulk_row.values_json or "{}"
+                            )
+
+                            final_data = {}
+
+                            for test_name, test_value in bulk_data.items():
+
+                                if isinstance(
+                                    test_value,
+                                    dict
+                                ):
+
+                                    final_data[test_name] = (
+                                        test_value.get(
+                                            "result",
+                                            0
+                                        )
+                                    )
+
+                                else:
+
+                                    final_data[test_name] = (
+                                        test_value
+                                    )
+
+                            test_row.values_json = json.dumps(
+                                final_data
+                            )
+
+                            updated = True
+
+                        except Exception:
+
+                            test_row.values_json = (
+                                bulk_row.values_json
+                            )
+
+                            updated = True
 
             if updated:
 

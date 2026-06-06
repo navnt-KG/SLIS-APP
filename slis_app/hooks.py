@@ -251,6 +251,9 @@ app_include_js = "/assets/slis_app/js/global_listview.js"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
+doctype_list_js = {
+    "Soil Sample Collection": "public/js/soil_sample_collection_list.js"
+}
 
 
 permission_query_conditions = {

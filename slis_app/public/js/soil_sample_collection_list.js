@@ -802,7 +802,160 @@ setInterval(() => {
                             );
                         }
 
+                        // =====================================
+                        // PARENT -> AUTO SELECT CHILDREN
+                        // =====================================
+                       
+                        $(document).on(
+                            "change",
+                            "input[type='checkbox']",
+                            async function () {
+
+                                let checked =
+                                    $(this).prop("checked");
+
+                                let row_name =
+                                    $(this)
+                                    .closest('.list-row-container')
+                                    .find('.list-subject a')
+                                    .text()
+                                    .trim();
+
+                                if (!row_name) {
+                                    return;
+                                }
+
+                                let doc =
+                                    await frappe.db.get_doc(
+                                        "Soil Sample Collection",
+                                        row_name
+                                    );
+
+                                // Farmer skip
+                                if (doc.client_type === "Farmer") {
+                                    return;
+                                }
+
+                                // =====================================
+                                // PARENT -> CHILDREN
+                                // =====================================
+
+                                if (!doc.parent_sample) {
+
+                                    let children =
+                                        await frappe.db.get_list(
+                                            "Soil Sample Collection",
+                                            {
+                                                filters: {
+                                                    parent_sample: doc.name
+                                                },
+                                                fields: ["name"]
+                                            }
+                                        );
+
+                                    children.forEach(child => {
+
+                                        $('.list-row-container').each(function () {
+
+                                            let child_row_name =
+                                                $(this)
+                                                .find('.list-subject a')
+                                                .text()
+                                                .trim();
+
+                                            if (
+                                                child_row_name === child.name
+                                            ) {
+
+                                                $(this)
+                                                    .find(
+                                                        'input[type="checkbox"]'
+                                                    )
+                                                    .prop(
+                                                        'checked',
+                                                        checked
+                                                    );
+                                            }
+                                        });
+
+                                    });
+                                }
+
+                                // =====================================
+                                // CHILD -> PARENT
+                                // =====================================
+
+                                else {
+
+                                    let siblings =
+                                        await frappe.db.get_list(
+                                            "Soil Sample Collection",
+                                            {
+                                                filters: {
+                                                    parent_sample:
+                                                        doc.parent_sample
+                                                },
+                                                fields: ["name"]
+                                            }
+                                        );
+
+                                    let all_checked = true;
+
+                                    siblings.forEach(sibling => {
+
+                                        $('.list-row-container').each(function () {
+
+                                            let sibling_name =
+                                                $(this)
+                                                .find('.list-subject a')
+                                                .text()
+                                                .trim();
+
+                                            if (
+                                                sibling_name === sibling.name
+                                            ) {
+
+                                                let is_checked =
+                                                    $(this)
+                                                    .find(
+                                                        'input[type="checkbox"]'
+                                                    )
+                                                    .prop("checked");
+
+                                                if (!is_checked) {
+                                                    all_checked = false;
+                                                }
+                                            }
+                                        });
+
+                                    });
+
+                                    $('.list-row-container').each(function () {
+
+                                        let parent_row_name =
+                                            $(this)
+                                            .find('.list-subject a')
+                                            .text()
+                                            .trim();
+
+                                        if (
+                                            parent_row_name ===
+                                            doc.parent_sample
+                                        ) {
+
+                                            $(this)
+                                                .find(
+                                                    'input[type="checkbox"]'
+                                                )
+                                                .prop(
+                                                    "checked",
+                                                    all_checked
+                                                );
+                                        }
+                                    });
+                                }
+                            }
+                        );                                                                                                                                           
                         console.log("BUTTON ADDED");
 
-                    }, 2000);
-                    
+                        }, 2000);

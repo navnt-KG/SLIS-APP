@@ -8,12 +8,12 @@
 // });
 frappe.ui.form.on("Bulk Result Entry", {
 
-    refresh(frm) {
+    async refresh(frm) {
         if (!frm.selected_test) {
         frm.selected_test = "All";
     }
 
-        render_table(frm);
+        await render_table(frm);
 
         frm.fields_dict.html.$wrapper
             .off("input")
@@ -22,28 +22,47 @@ frappe.ui.form.on("Bulk Result Entry", {
                 let sample = $(this).data("sample");
                 let test = $(this).data("test");
                 let value = $(this).val();
+                let key = $(this).data("key");
+
 
                 update_json(
                     frm,
                     sample,
                     test,
+                    key,
                     value
                 );
 
             });
+        frm.fields_dict.html.$wrapper
+            .off("change", ".machine-select")
+            .on(
+                "change",
+                ".machine-select",
+                function () {
+
+                    update_machine_for_test(
+                        frm,
+                        frm.selected_test,
+                        $(this).val()
+                    );
+                }
+            );    
+        
+       
 
         frm.fields_dict.html.$wrapper
             .off("click", ".test-filter")
-            .on("click", ".test-filter", function () {
+            .on("click", ".test-filter", async function () {
 
                 frm.selected_test =
                     $(this).data("test");
 
-                render_table(frm);
+                await render_table(frm);
             });
     },
-    after_save(frm) {
-        render_table(frm);
+    async after_save(frm) {
+        await render_table(frm);
     }
 });
 
@@ -52,14 +71,53 @@ frappe.ui.form.on("Bulk Result Entry", {
 // HTML TABLE
 // =====================================
 
-function render_table(frm) {
-
+async function render_table(frm) {
     let rows = frm.doc.sample_data || [];
 
     let tests = [];
 
     let selected_test =
         frm.selected_test || "All";
+    let package_doc = null;
+    if (!frm.test_packages) {
+    frm.test_packages = {};
+}
+    if (selected_test !== "All") {
+
+        try {
+
+            package_doc =
+                await frappe.db.get_doc(
+                    "Soil Test Package",
+                    selected_test
+                );
+            frm.test_packages[selected_test] =
+                package_doc;
+
+
+            console.log(
+                "PACKAGE DOC",
+                package_doc
+            );
+
+            console.log(
+                "FORMULA",
+                package_doc.formula
+            );
+
+            console.log(
+                "VARIABLE TABLE",
+                package_doc.variable_table
+            );
+
+        } catch (e) {
+
+            console.error(
+                "PACKAGE ERROR",
+                e
+            );
+        }
+    }
 
     if (rows.length > 0) {
 
@@ -75,7 +133,25 @@ function render_table(frm) {
             console.error(e);
         }
     }
+    let devices = [];
 
+    try {
+        devices = await frappe.db.get_list(
+            "Asset",
+            {
+                filters: {
+                    asset_category: "Devices"
+                },
+                fields: [
+                    "name",
+                    "asset_name"
+                ],
+                limit: 500
+            }
+        );
+    } catch (e) {
+        console.log(e);
+    }
     let html = `
         <div style="margin-bottom:10px;">
 
@@ -105,6 +181,64 @@ function render_table(frm) {
             </button>
         `;
     });
+    let selected_machine = "";
+
+    if (rows.length > 0) {
+        try {
+            let first_obj = JSON.parse(
+                rows[0].values_json || "{}"
+            );
+
+            if (
+                first_obj[selected_test] &&
+                typeof first_obj[selected_test] === "object"
+            ) {
+                selected_machine =
+                    first_obj[selected_test].machine || "";
+            }
+        } catch (e) {}
+    }
+
+
+
+       
+    if (selected_test !== "All") {
+
+        html += `
+            <div style="margin-bottom:15px;">
+                <label><b>Machine Name</b></label>
+
+                <select
+                    class="machine-select form-control"
+                    style="width:300px;"
+                >
+
+                    <option value="">
+                        Select Machine
+                    </option>
+        `;
+
+        devices.forEach(d => {
+
+            html += `
+                <option
+                    value="${d.asset_name}"
+                    ${
+                        selected_machine === d.asset_name
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    ${d.asset_name}
+                </option>
+            `;
+        });
+
+        html += `
+                </select>
+            </div>
+        `;
+    }
 
     html += `
         </div>
@@ -117,18 +251,34 @@ function render_table(frm) {
                 <th>Sample ID</th>
                 <th>Lab Code</th>
     `;
+    if (selected_test !== "All") {
+        html += `<th>Machine Name</th>`;
+    }
 
-    tests
-        .filter(test =>
-            selected_test === "All" ||
-            test === selected_test
-        )
-        .forEach(test => {
+    if (selected_test === "All") {
+
+        tests.forEach(test => {
 
             html += `
                 <th>${test}</th>
             `;
         });
+
+    }
+    else if (package_doc) {
+
+        package_doc.variable_table.forEach(v => {
+
+            html += `
+                <th>${v.label}</th>
+            `;
+        });
+
+        html += `
+            <th>Formula</th>
+            <th>${selected_test}</th>
+        `;
+    }
 
     html += `
             </tr>
@@ -169,36 +319,117 @@ function render_table(frm) {
                     ${row.lab_code || ""}
                 </td>
         `;
+        if (selected_test !== "All") {
 
-        tests
-            .filter(test =>
-                selected_test === "All" ||
-                test === selected_test
-            )
-            .forEach(test => {
+            html += `
+                <td>
+                    ${selected_machine}
+                </td>
+            `;
+        }
+
+        if (
+            selected_test !== "All" &&
+            package_doc
+        ) {
+
+            package_doc.variable_table.forEach(v => {
 
                 html += `
                     <td>
-
                         <input
-                            type="text"
-
-                            class="cell form-control ${
-                                obj[test]
-                                    ? "bg-success text-dark"
-                                    : ""
-                            }"
-
+                            type="number"
+                            class="cell form-control variable-input"
                             data-sample="${sample_id}"
-
-                            data-test="${test}"
-
-                            value="${String(obj[test] ?? '')}"
+                            data-test="${selected_test}"
+                            data-key="${v.variable_key}"
+                            value="${
+                                obj[selected_test]?.[v.variable_key]
+                                ?? v.default_value
+                                ?? ''
+                            }"
                         >
-
                     </td>
                 `;
             });
+
+            let result = 0;
+
+            try {
+
+                let formula =
+                    package_doc.formula || "";
+
+                package_doc.variable_table.forEach(v => {
+
+                    let val =
+                        obj[selected_test]?.[
+                            v.variable_key
+                        ]
+                        ?? v.default_value
+                        ?? 0;
+
+                    formula =
+                        formula.replaceAll(
+                            v.variable_key,
+                            val
+                        );
+                });
+
+                result = eval(formula);
+                if (!obj[selected_test]) {
+                    obj[selected_test] = {};
+                }
+
+                obj[selected_test].result = result;
+                frappe.model.set_value(
+                row.doctype,
+                row.name,
+                "values_json",
+                JSON.stringify(obj)
+            );
+
+            } catch (e) {
+
+                console.log(e);
+            }
+
+            html += `
+                <td>
+                    ${package_doc.formula || ""}
+                </td>
+
+                <td class="final-value">
+                    ${result}
+                </td>
+            `;
+        }
+        else {
+
+            tests.forEach(test => {
+
+                let value = 0;
+
+                if (
+                    typeof obj[test] === "object"
+                ) {
+
+                    value =
+                        obj[test].result || 0;
+
+                } else {
+
+                    value =
+                        obj[test] || 0;
+                }
+
+                html += `
+                    <td>
+                        ${value}
+                    </td>
+                `;
+            });
+        }
 
         html += `
             </tr>
@@ -225,6 +456,7 @@ function update_json(
     frm,
     sample,
     test,
+    key,
     value
 ) {
 
@@ -251,8 +483,56 @@ function update_json(
                 console.error(e);
             }
 
-            obj[test] = value;
+            if (typeof obj[test] !== "object") {
 
+                obj[test] = {
+                    machine: ""
+                };
+            }
+
+            obj[test][key] =
+                parseFloat(value) || 0;
+            
+            
+
+            let formula = "";
+
+            if (
+                frm.test_packages &&
+                frm.test_packages[test]
+            ) {
+
+                formula =
+                    frm.test_packages[test].formula || "";
+            }
+
+            if (formula) {
+
+                Object.keys(obj[test]).forEach(k => {
+
+                    if (
+                        k !== "machine" &&
+                        k !== "result"
+                    ) {
+
+                        formula =
+                            formula.replaceAll(
+                                k,
+                                obj[test][k]
+                            );
+                    }
+                });
+
+                try {
+
+                    obj[test].result =
+                        eval(formula);
+
+                } catch (e) {
+
+                    obj[test].result = 0;
+                }
+            }
             frappe.model.set_value(
                 row.doctype,
                 row.name,
@@ -263,7 +543,50 @@ function update_json(
         }
     });
 
+
     
 
     frm.dirty();
 }
+    function update_machine_for_test(
+        frm,
+        test,
+        machine
+    ) {
+
+        (frm.doc.sample_data || [])
+        .forEach(row => {
+
+            let obj = {};
+
+            try {
+
+                obj = JSON.parse(
+                    row.values_json || "{}"
+                );
+
+            } catch (e) {}
+
+            if (
+                typeof obj[test] !== "object"
+            ) {
+
+                obj[test] = {
+                    machine: ""
+                };
+            }
+            obj[test].machine =
+                machine;
+
+            frappe.model.set_value(
+                row.doctype,
+                row.name,
+                "values_json",
+                JSON.stringify(obj)
+            );
+        });
+
+        frm.dirty();
+
+        frm.trigger("refresh");
+    }
