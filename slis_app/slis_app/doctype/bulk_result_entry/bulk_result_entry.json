@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:batch_id",
  "creation": "2026-06-04 12:59:39.631752",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -31,10 +32,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-04 13:03:06.382517",
+ "modified": "2026-06-07 11:57:49.484434",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Bulk Result Entry",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

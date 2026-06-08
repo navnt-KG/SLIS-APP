@@ -391,6 +391,7 @@ setInterval(() => {
                         // =====================================
 
                         if (is_farmer) {
+                            console.log("SAMPLE DATA =", child_doc.sample_data);
 
                             if (
                                 existing_sample_ids.includes(
@@ -399,26 +400,26 @@ setInterval(() => {
                             ) continue;
 
                             if (
-                                !test_result_doc
-                                .test_sample_data
+                                !test_result_doc.test_sample_data
                             ) {
 
-                                test_result_doc
-                                    .test_sample_data = [];
+                                test_result_doc.test_sample_data = [];
                             }
 
-                            test_result_doc
-                                .test_sample_data.push({
+                            let farmer_row =
+                                (child_doc.sample_data || [])[0];
+                            console.log("FARMER ROW =", farmer_row);
+                            test_result_doc.test_sample_data.push({
 
-                                    sample_id:
-                                        child_doc.name,
+                                sample_id:
+                                    farmer_row?.sample_id || child_doc.name,
 
-                                    lab_code:
-                                        child_doc.lab_code || "",
+                                lab_code:
+                                    farmer_row?.lab_code || "",
 
-                                    values_json:
-                                        "{}"
-                                });
+                                values_json:
+                                    farmer_row?.values_json || "{}"
+                            });
 
                             existing_sample_ids.push(
                                 child_doc.name
@@ -426,7 +427,6 @@ setInterval(() => {
 
                             continue;
                         }
-
                         // =====================================
                         // DEPARTMENT / CONSULTANCY
                         // =====================================
@@ -544,7 +544,8 @@ setInterval(() => {
                             child_doc.name,
                             {
                                 status: "With Research Assistant",
-                                moved_to_test: 1
+                                moved_to_test: 1,
+                                lab_name: parent_doc.target_lab
                             }
                         );
                     }
@@ -553,10 +554,10 @@ setInterval(() => {
                         parent_name,
                         {
                             status: "With Research Assistant",
-                            moved_to_test: 1
+                            moved_to_test: 1,
+                            lab_name: parent_doc.target_lab
                         }
                     );
-
                     frappe.show_alert({
                         message: `${parent_name} moved to test successfully`,
                         indicator: "green"

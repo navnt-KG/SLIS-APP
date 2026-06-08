@@ -30,8 +30,7 @@ frappe.ui.form.on("Soil Sample Collection", {
 
  // ✅ MOVE TO TEST BUTTON
 
- if (!frm.is_new()&&frm.doc.status === "With Research Assistant") {
-
+if (false) {
 
 
  frm.add_custom_button(__('Move to Test'), () => {
@@ -43,6 +42,23 @@ frappe.ui.form.on("Soil Sample Collection", {
 
 
  let current_status = frm.doc.status;
+ // =========================
+// VALIDATION FOR PARENT SAMPLE
+// =========================
+if (
+    ["Department", "Consultancy"].includes(frm.doc.client_type) &&
+    frm.doc.is_master_sample
+) {
+    frappe.msgprint({
+        title: __("Selection Not Allowed"),
+        indicator: "orange",
+        message: __(
+            "Only generated samples can be moved to test for Department and Consultancy clients."
+        )
+    });
+
+    return;
+}
 
 
 
@@ -380,9 +396,7 @@ frappe.ui.form.on("Soil Sample Collection", {
         frm.page.clear_primary_action();
 
         // ✅ MOVE TO TEST BUTTON
-        if (!frm.is_new()&&
-            frm.doc.status === "With Research Assistant"
-        ) {
+        if (false) {
 
             frm.add_custom_button(__('Move to Test'), () => {
 

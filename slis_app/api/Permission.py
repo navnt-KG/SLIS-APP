@@ -17,7 +17,7 @@ def sample_permission_query(user=None):
     )
 
     if not employee:
-        return f"owner = '{user}'"
+        return f"`tabSoil Sample Collection`.owner = '{user}'"
 
     conditions = []
 
@@ -27,8 +27,8 @@ def sample_permission_query(user=None):
     # =====================================================
     if "Soil Intaker L1" in roles or "Soil Tester L1" in roles:
         return (
-            f"(owner = '{user}' "
-            f"OR `_assign` LIKE '%%\"{user}\"%%')"
+            f"(`tabSoil Sample Collection`.owner = '{user}' "
+            f"OR `tabSoil Sample Collection`.`_assign` LIKE '%%\"{user}\"%%')"
         )
 
     # =====================================================
@@ -37,7 +37,7 @@ def sample_permission_query(user=None):
     # =====================================================
     if "Soil Intaker L3" in roles:
         return (
-            f"(`_assign` LIKE '%%\"{user}\"%%')"
+            f"(`tabSoil Sample Collection`.`_assign` LIKE '%%\"{user}\"%%')"
         )
 
     # DISTRICT OFFICE
@@ -45,11 +45,16 @@ def sample_permission_query(user=None):
         conditions.append("(client_type = 'Department')")
 
     # BASIC PERMISSIONS
-    conditions.append(f"owner = '{user}'")
-    conditions.append(f"(`_assign` LIKE '%%\"{user}\"%%')")
+    conditions.append(
+        f"`tabSoil Sample Collection`.owner = '{user}'"
+    )
+
+    conditions.append(
+        f"(`tabSoil Sample Collection`.`_assign` LIKE '%%\"{user}\"%%')"
+    )
 
     # PSC OFFICER
-    if "slis_admin" in roles:
+    if "slis_admin" in roles or "PSC Officer" in roles:
         conditions.append(
             "("
             "employee_type = 'Lab' "
