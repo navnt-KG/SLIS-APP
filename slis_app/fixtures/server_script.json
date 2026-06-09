@@ -245,5 +245,43 @@
   "reference_doctype": "User",
   "script": "user = frappe.session.user\n\n# Administrator full access\nif user == \"Administrator\":\n    conditions = \"\"\n\nelse:\n\n    # Get logged-in user's employee details\n    emp = frappe.db.get_value(\n        \"Employee\",\n        {\"user_id\": user},\n        [\n            \"designation\",\n            \"employment_type\",\n            \"custom_lab_name\",\n            \"custom_district_office_name\"\n        ],\n        as_dict=True\n    )\n\n    # No employee linked\n    if not emp:\n        conditions = \"1=0\"\n\n    else:\n\n        designation = emp.designation or \"\"\n        employment_type = emp.employment_type or \"\"\n\n        # FULL ACCESS DESIGNATIONS\n        full_access_designations = [\n            \"PSC Officer\",\n            \"Managing Director\",\n            \"Additional Director\",\n            \"Joint Director\",\n            \"Director\"\n        ]\n\n        # FULL USER LIST\n        if designation in full_access_designations:\n            conditions = \"\"\n\n        # SENIOR CHEMIST -> SAME LAB USERS\n        elif designation == \"Senior Chemist\":\n\n            employees = frappe.get_all(\n                \"Employee\",\n                filters={\n                    \"custom_lab_name\": emp.custom_lab_name\n                },\n                pluck=\"user_id\"\n            )\n\n            users = [u for u in employees if u]\n\n            if users:\n                users = \"', '\".join(users)\n                conditions = (\n                    f\"`tabUser`.`name` IN ('{users}')\"\n                )\n            else:\n                conditions = \"1=0\"\n\n        # ASSISTANT DIRECTOR -> SAME DISTRICT OFFICE USERS\n        elif designation == \"Assistant Director\":\n\n            employees = frappe.get_all(\n                \"Employee\",\n                filters={\n                    \"custom_district_office_name\":\n                    emp.custom_district_office_name\n                },\n                pluck=\"user_id\"\n            )\n\n            users = [u for u in employees if u]\n\n            if users:\n                users = \"', '\".join(users)\n                conditions = (\n                    f\"`tabUser`.`name` IN ('{users}')\"\n                )\n            else:\n                conditions = \"1=0\"\n\n        # OTHER DESIGNATIONS -> ONLY OWN USER\n        else:\n\n            conditions = (\n                f\"`tabUser`.`name` = '{user}'\"\n            )",
   "script_type": "Permission Query"
+ },
+ {
+  "allow_guest": 0,
+  "api_method": null,
+  "cron_format": null,
+  "disabled": 1,
+  "docstatus": 0,
+  "doctype": "Server Script",
+  "doctype_event": "Before Save",
+  "enable_rate_limit": 0,
+  "event_frequency": "All",
+  "modified": "2026-06-09 16:00:27.541209",
+  "module": "Slis App",
+  "name": "Transfer and return workflow condition",
+  "rate_limit_count": 5,
+  "rate_limit_seconds": 86400,
+  "reference_doctype": "Soil Sample Collection",
+  "script": "if doc.status == \"With Senior Chemist\":\n\n    employee_lab = frappe.db.get_value(\n        \"Employee\",\n        {\"user_id\": frappe.session.user},\n        \"custom_lab_name\"\n    )\n\n    frappe.throw(\n        f\"\"\"\n        Status: {doc.status}\n\n        Login User: {frappe.session.user}\n\n        Employee Lab: {employee_lab}\n\n        Target Lab: {doc.target_lab}\n        \"\"\"\n    )",
+  "script_type": "DocType Event"
+ },
+ {
+  "allow_guest": 0,
+  "api_method": null,
+  "cron_format": null,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Server Script",
+  "doctype_event": "Before Insert",
+  "enable_rate_limit": 0,
+  "event_frequency": "All",
+  "modified": "2026-06-09 14:43:11.548558",
+  "module": "Slis App",
+  "name": "Assign to restriction",
+  "rate_limit_count": 5,
+  "rate_limit_seconds": 86400,
+  "reference_doctype": "ToDo",
+  "script": "if doc.reference_type == \"Soil Sample Collection\":\n\n    status = frappe.db.get_value(\n        \"Soil Sample Collection\",\n        doc.reference_name,\n        \"status\"\n    )\n\n    status = (status or \"\").strip()\n\n    allowed_states = [\n        \"With Senior Chemist\",\n        \"With Research Assistant\",\n        \"Transferred\",\n        \"Returned\"\n    ]\n\n    if status not in allowed_states:\n        frappe.throw(\n            \"Assignment is allowed only when the status is With Senior Chemist, Transferred, or Returned.\"\n        )\n\n  ",
+  "script_type": "DocType Event"
  }
 ]

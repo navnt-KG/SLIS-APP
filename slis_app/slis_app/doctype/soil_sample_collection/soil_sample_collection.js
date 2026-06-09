@@ -822,3 +822,20 @@ frappe.listview_settings[
  );
 
 }
+
+
+
+
+
+
+
+
+
+//hide the default button and show only the custom buttons:
+frappe.listview_settings['Soil Sample Collection'] = {
+    onload: function(listview) {
+        setTimeout(function() {
+            $('[data-label="New"]').hide();
+        }, 300);
+    }
+};

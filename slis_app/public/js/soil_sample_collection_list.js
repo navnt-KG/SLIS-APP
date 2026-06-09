@@ -609,7 +609,65 @@ setInterval(() => {
         $(button).addClass(
         "custom-move-test-btn"
     );
+    // =====================================
+    // VERIFY PHYSICAL SAMPLE ACTION
+    // =====================================
 
+    cur_list.page.add_action_item(
+    __("Verify Physical Sample"),
+
+    async function () {
+
+        let selected =
+            cur_list.get_checked_items();
+
+        if (
+            !selected ||
+            selected.length === 0
+        ) {
+
+            frappe.msgprint(
+                __("Please select at least one sample")
+            );
+
+            return;
+        }
+
+        let updated_count = 0;
+
+        for (let item of selected) {
+
+            let doc =
+                await frappe.db.get_doc(
+                    "Soil Sample Collection",
+                    item.name
+                );
+
+            if (doc.verified_physical_sample) {
+                continue;
+            }
+
+            await frappe.db.set_value(
+                "Soil Sample Collection",
+                doc.name,
+                {
+                    verified_physical_sample: 1
+                }
+            );
+
+            updated_count++;
+        }
+
+        frappe.show_alert({
+            message:
+                `${updated_count} sample(s) verified successfully`,
+            indicator: "green"
+        });
+
+        cur_list.refresh();
+    }
+);
+  
     // =====================================
     // BULK RESULT ENTRY BUTTON
     // =====================================

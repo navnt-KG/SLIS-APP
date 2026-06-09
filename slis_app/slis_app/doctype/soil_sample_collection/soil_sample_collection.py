@@ -151,35 +151,74 @@ class SoilSampleCollection(Document):
         # LAB CODE
         # =========================================
 
+        # lab_code = None
+
+        # # LAB NAME
+
+        # if employee_data.custom_lab_name:
+
+        #     lab_code = lab_map.get(
+        #         employee_data.custom_lab_name
+        #     )
+
+        # # DISTRICT OFFICE
+
+        # if (
+        #     not lab_code
+        #     and
+        #     employee_data.custom_district_office_name
+        # ):
+
+        #     lab_code = district_map.get(
+        #         employee_data.custom_district_office_name
+        #     )
+
+        # if not lab_code:
+
+        #     frappe.throw(
+        #         "Neither a valid Lab nor a "
+        #         "District Office was found "
+        #         "for your Employee record."
+        #     )
+
+
+
+
+        # =========================================
+        # LAB CODE LOGIC
+        # =========================================
+        
         lab_code = None
+        
+        # 1. Check if user provided a Target Lab in the form
+        if self.target_lab:
+            # Map the target lab input to the code
+            lab_code = lab_map.get(self.target_lab)
+            
+        # 2. If no target_lab, check Employee's custom_lab_name
+        if not lab_code and employee_data.custom_lab_name:
+            lab_code = lab_map.get(employee_data.custom_lab_name)
 
-        # LAB NAME
-
-        if employee_data.custom_lab_name:
-
-            lab_code = lab_map.get(
-                employee_data.custom_lab_name
-            )
-
-        # DISTRICT OFFICE
-
+        # 3. If still no lab_code, check Employee's custom_district_office_name
         if (
             not lab_code
             and
             employee_data.custom_district_office_name
         ):
+            lab_code = district_map.get(employee_data.custom_district_office_name)
 
-            lab_code = district_map.get(
-                employee_data.custom_district_office_name
-            )
-
+        # 4. If nothing found, throw error
         if not lab_code:
-
             frappe.throw(
-                "Neither a valid Lab nor a "
-                "District Office was found "
-                "for your Employee record."
+                "Neither a valid Lab nor a District Office was found "
+                "for your selection or your Employee record."
             )
+            
+        # Optional: Set the field in the doc if you want it saved to the DB
+        self.lab_code_prefix = lab_code
+
+
+
 
         # =========================================
         # FINAL NAME
@@ -220,37 +259,77 @@ class SoilSampleCollection(Document):
 
         if user != "Administrator":
 
-            if "PSC Officer" in roles:
+            # if "PSC Officer" in roles:
 
-                if self.employee_type == "Lab":
+            #     if self.employee_type == "Lab":
 
+            #         frappe.throw(
+            #             "PSC Officer cannot edit Lab records"
+            #         )
+
+            #     old_doc = self.get_doc_before_save()
+
+            #     previous_status = ""
+
+            #     if old_doc:
+
+            #         previous_status = old_doc.status
+
+            #     if (
+            #         (previous_status or "").strip()
+            #         not in [
+            #             "With PSC Officer",
+            #             "Returned to PSC Officer (Overload)"
+            #         ]
+            #     ):
+
+            #         frappe.throw(
+            #             "Edit allowed only when "
+            #             "status is "
+            #             "'With PSC Officer' "
+            #             "or "
+            #             "'Returned to PSC Officer (Overload)'"
+            #         )
+
+            # =========================================
+            # TRANSFER / RETURN VALIDATION
+            # =========================================
+
+            employee_lab = frappe.db.get_value(
+                "Employee",
+                {"user_id": frappe.session.user},
+                "custom_lab_name"
+            )
+
+            old_doc = self.get_doc_before_save()
+            old_status = old_doc.status if old_doc else ""
+
+            # Transfer Action
+            if old_status == "With Senior Chemist" and self.status == "Transferred":
+
+                if not self.target_lab:
+                    frappe.throw("Please select Target Lab")
+
+                if employee_lab and self.target_lab == employee_lab:
                     frappe.throw(
-                        "PSC Officer cannot edit Lab records"
+                        "Target Lab cannot be the same as your Lab. Please change the Target Lab before Transfer."
                     )
 
-                old_doc = self.get_doc_before_save()
+                self.is_transferred = 1
+                self.is_returned = 0
+                self.transfer_status = f"Transferred to {self.target_lab}"
 
-                previous_status = ""
+            # Return Action
+            elif old_status == "Transferred" and self.status == "Returned":
 
-                if old_doc:
-
-                    previous_status = old_doc.status
-
-                if (
-                    (previous_status or "").strip()
-                    not in [
-                        "With PSC Officer",
-                        "Returned to PSC Officer (Overload)"
-                    ]
-                ):
-
+                if employee_lab and self.target_lab != employee_lab:
                     frappe.throw(
-                        "Edit allowed only when "
-                        "status is "
-                        "'With PSC Officer' "
-                        "or "
-                        "'Returned to PSC Officer (Overload)'"
+                        "Only the Target Lab can return this sample."
                     )
+
+                self.is_returned = 1
+                self.transfer_status = f"Returned to {self.target_lab}"
+
 
     # =====================================================
     # ON UPDATE

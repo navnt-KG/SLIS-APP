@@ -118,7 +118,10 @@
   "column_break_skhe",
   "employee_type",
   "send_back_reason",
-  "creator_user"
+  "creator_user",
+  "transfer_status",
+  "is_transferred",
+  "is_returned"
  ],
  "fields": [
   {
@@ -647,9 +650,8 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
-   "hidden": 1,
    "label": "status",
-   "options": "\nDraft\nSave\nEnter File number\nWith Senior Chemist\nWith Assistant Director\nWith Director\nWith PSC Officer\nWith Research Assistant\nReturned to Senior Chemist(Overload)\nReturned to PSC (Overload)\ncompleted\nCancelled"
+   "options": "\nDraft\nSave\nEnter File number\nWith Senior Chemist\nWith Assistant Director\nWith Director\nWith PSC Officer\nWith Research Assistant\nTransferred\nReturned\ncompleted\nCancelled"
   },
   {
    "fieldname": "total_parameter_count",
@@ -731,7 +733,8 @@
    "fieldname": "lab_code_prefix",
    "fieldtype": "Link",
    "label": "Lab Code Prefix",
-   "options": "Lab Code Prefix"
+   "options": "Lab Code Prefix",
+   "read_only_depends_on": "eval: doc.client_type == \"Department\""
   },
   {
    "fieldname": "lab_code_start",
@@ -809,12 +812,29 @@
   {
    "fieldname": "column_break_iigc",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "transfer_status",
+   "fieldtype": "Select",
+   "label": "Transfer Status"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_transferred",
+   "fieldtype": "Check",
+   "label": "Is Transferred"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_returned",
+   "fieldtype": "Check",
+   "label": "Is Returned"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-08 10:18:43.251296",
+ "modified": "2026-06-09 14:57:37.766758",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

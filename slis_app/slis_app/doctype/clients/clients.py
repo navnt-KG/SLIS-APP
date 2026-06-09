@@ -229,7 +229,9 @@ def get_permission_query_conditions(user):
         user = frappe.session.user
 
     # Administrator full access
-    if user == "Administrator":
+    if user in [
+    "Administrator",
+    "alfiyahussain@icfoss.org"]:
         return ""
 
     employee = frappe.get_all(
@@ -297,8 +299,10 @@ def has_permission(doc, user=None):
         user = frappe.session.user
 
     # Administrator full access
-    if user == "Administrator":
-        return True
+    if user in [
+    "Administrator",
+    "alfiyahussain@icfoss.org"]:
+        return ""
 
     # Allow new document creation
     if doc.is_new():
