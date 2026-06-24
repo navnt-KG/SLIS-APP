@@ -567,8 +567,9 @@
   {
    "depends_on": "eval:doc.scheme_name == \"NSMP\"",
    "fieldname": "block",
-   "fieldtype": "Data",
-   "label": "Block"
+   "fieldtype": "Link",
+   "label": "Block",
+   "options": "Block"
   },
   {
    "depends_on": "eval:doc.scheme_name == \"NSMP\"",
@@ -703,8 +704,9 @@
   {
    "depends_on": "eval:doc.client_type == 'Department'",
    "fieldname": "block_name",
-   "fieldtype": "Data",
-   "label": "Block"
+   "fieldtype": "Link",
+   "label": "Block",
+   "options": "Block"
   },
   {
    "depends_on": "eval:doc.client_type == 'Department'",
@@ -834,7 +836,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-09 14:57:37.766758",
+ "modified": "2026-06-10 10:12:29.266834",
  "modified_by": "Administrator",
  "module": "Slis App",
  "name": "Soil Sample Collection",

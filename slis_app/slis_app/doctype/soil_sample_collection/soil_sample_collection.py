@@ -180,9 +180,7 @@ class SoilSampleCollection(Document):
         #         "District Office was found "
         #         "for your Employee record."
         #     )
-
-
-
+        
 
         # =========================================
         # LAB CODE LOGIC

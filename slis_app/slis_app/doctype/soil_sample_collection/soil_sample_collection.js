@@ -1,840 +1,488 @@
-
-frappe.ui.form.on("Soil Sample Collection", {
-
- refresh(frm) {
-
- console.log("Backend JS loaded");
- // Add Sample Button
- if (!frm.is_new() && frm.doc.docstatus === 0) {
- frm.add_custom_button(__('Add Sample'), function () {
- frappe.new_doc('Soil Sample Collection', {
-    client: frm.doc.client,
-
- reference_name: frm.doc.reference_name
-
- });
-
-
-
- });
-
- }
-
-
-
- // Remove default Save
-
- frm.page.clear_primary_action();
-
-
-
- // ✅ MOVE TO TEST BUTTON
-
-if (false) {
-
-
- frm.add_custom_button(__('Move to Test'), () => {
-
-
-
- console.log("Move to Test clicked");
-
-
-
- let current_status = frm.doc.status;
- // =========================
-// VALIDATION FOR PARENT SAMPLE
 // =========================
-if (
-    ["Department", "Consultancy"].includes(frm.doc.client_type) &&
-    frm.doc.is_master_sample
-) {
-    frappe.msgprint({
-        title: __("Selection Not Allowed"),
-        indicator: "orange",
-        message: __(
-            "Only generated samples can be moved to test for Department and Consultancy clients."
-        )
-    });
-
-    return;
-}
-
-
-
- if (current_status !== "With Research Assistant") {
-
-
-
- frappe.msgprint({
-
- title: __('Status Error'),
-
- indicator: 'red',
-
- message: __('Either not assigned/ Completed!')
-
- });
-
-
-
- return;
-
- }
-
-
-
- // 🔍 DUPLICATE CHECK
-
- frappe.call({
-
- method: "frappe.client.get_list",
-
- args: {
-
- doctype: "Soil Test Result",
-
- filters: {
-
- main_sample_id: frm.doc.name
-
- },
-
- fields: ["name"],
-
- limit_page_length: 1
-
- },
-
-
-
- callback: function (r) {
-
-
-
- console.log("API Response:", r);
-
-
-
- if (r && r.message && r.message.length > 0) {
-
-
-
- let existing_name = r.message[0].name;
-
-
-
- frappe.confirm(
-
- `Soil Test Result already exists (${existing_name})<br><br>Open existing record?`,
-
-
-
- function () {
-
-
-
- frappe.set_route(
-
- 'Form',
-
- 'Soil Test Result',
-
- existing_name
-
- );
-
-
-
- },
-
-
-
- function () {}
-
-
-
- );
-
-
-
- } else {
-
-
-
- create_test_result(frm);
-
-
-
- }
-
- },
-
-
-
- error: function () {
-
-
-
- create_test_result(frm);
-
-
-
- }
-
- });
-
-
-
- }).addClass('btn-primary');
-
- }
-
- }
-
-});
-
-
-
-
+// FORM EVENTS
 // =========================
-
-// CREATE SOIL TEST RESULT
-
-// =========================
-
-async function create_test_result(frm) {
-
-
-
- await frappe.model.with_doctype('Soil Test Result');
-
-
-
- let new_doc = frappe.model.get_new_doc('Soil Test Result');
-
-
-
- // ✅ BASIC
-
- new_doc.main_sample_id = frm.doc.name;
-
-
-
- new_doc.client = frm.doc.client;
-
- new_doc.client_type = frm.doc.client_type;
-
-
-
- new_doc.latitude = frm.doc.latitude;
-
- new_doc.longitude = frm.doc.longitude;
-
-
-
- new_doc.plot_size = frm.doc.plot_size;
-
-
-
- new_doc.name_of_type = frm.doc.name_of_type;
-
-
-
- new_doc.type_of_collection = frm.doc.type_of_collection;
-
-
-
- new_doc.number_of_sample = frm.doc.number_of_samples;
-
-
-
- new_doc.lab_code_prefix = frm.doc.lab_code_prefix;
-
-
-
- new_doc.lab_code_start = frm.doc.lab_code_start;
-
-
-
- // =========================
-
- // DATA MOVE
-
- // =========================
-
- new_doc.test_sample_data = [];
-
-
-
- // ✅ Farmer skip sample_data
-
- if (
-
- frm.doc.client_type !== "Farmer" &&
-
- frm.doc.sample_data &&
-
- frm.doc.sample_data.length > 0
-
- ) {
-
-
-
- frm.doc.sample_data.forEach(row => {
-
-
-
- let is_consultancy =
-
- frm.doc.client_type === "Consultancy";
-
-
-
- new_doc.test_sample_data.push({
-
-
-
- sample_id:
-
- is_consultancy
-
- ? row.lab_code
-
- : row.sample_id,
-
-
-
- lab_code: row.lab_code,
-
-
-
- values_json:
-
- row.values_json || "{}"
-
-
-
- });
-
-
-
- });
-
- }
-
-
-
- // =========================
-
- // TESTS
-
- // =========================
-
- for (let row of (frm.doc.tests || [])) {
-
-
-
- if (!row.test_name)
-
- continue;
-
-
-
- try {
-
-
-
- let pkg =
-
- await frappe.db.get_doc(
-
- 'Soil Test Package',
-
- row.test_name
-
- );
-
-
-
- // ✅ INCLUDED TESTS EXISTS
-
- if (
-
- pkg.included_tests &&
-
- pkg.included_tests.length > 0
-
- ) {
-
-
-
-
-
-
-
-
 frappe.ui.form.on("Soil Sample Collection", {
     refresh(frm) {
 
-        console.log("Backend JS loaded");
-
-        // Add Sample Button
-        if (!frm.is_new() && frm.doc.docstatus === 0) {
-
-            frm.add_custom_button(__('Add Sample'), function () {
-
-                frappe.new_doc('Soil Sample Collection', {
-                    client: frm.doc.client,
-                    reference_name: frm.doc.reference_name
-                });
-
-            });
+        // Top-center alert CSS
+        if (!$("#top-center-alert-style").length) {
+            $("head").append(`
+                <style id="top-center-alert-style">
+                    .alert-container {
+                        top: 70px !important;
+                        left: 50% !important;
+                        right: auto !important;
+                        bottom: auto !important;
+                        transform: translateX(-50%) !important;
+                    }
+                </style>
+            `);
         }
 
-        // Remove default Save
+        console.log("Backend JS loaded");
+
+        // Remove default Save button
         frm.page.clear_primary_action();
 
-        // ✅ MOVE TO TEST BUTTON
-        if (false) {
-
-            frm.add_custom_button(__('Move to Test'), () => {
-
-                console.log("Move to Test clicked");
-
-                let current_status = frm.doc.status;
-
-                if (current_status !== "With Research Assistant") {
-
-                    frappe.msgprint({
-                        title: __('Status Error'),
-                        indicator: 'red',
-                        message: __('Either not assigned/ Completed!')
-                    });
-
-                    return;
+        // ── Download Template Button ───────────────────────────────
+        if (
+            !frm.is_new() &&
+            frm.doc.sample_data &&
+            frm.doc.sample_data.length > 0
+        ) {
+            frm.add_custom_button(
+                __("Download Template"),
+                function () {
+                    export_template(frm);
                 }
+            );
+             frm.add_custom_button(
+                __("Import Template"),
+                function () {
+                    import_template(frm);
+                }
+            );
+        }
 
-                // 🔍 DUPLICATE CHECK
-                frappe.call({
-                    method: "frappe.client.get_list",
-                    args: {
-                        doctype: "Soil Test Result",
-                        filters: {
-                            main_sample_id: frm.doc.name
+        // ── Add Sample Button ─────────────────────────────────────
+        if (!frm.is_new() && frm.doc.docstatus === 0) {
+            frm.add_custom_button(
+                __("Add Sample"),
+                function () {
+                    frappe.new_doc(
+                        "Soil Sample Collection",
+                        {
+                            client: frm.doc.client,
+                            reference_name:
+                                frm.doc.reference_name
+                        }
+                    );
+                }
+            );
+        }
+
+        // ── Move to Test Button ───────────────────────────────────
+        if (false) {
+            frm.add_custom_button(
+                __("Move to Test"),
+                () => {
+
+                    console.log(
+                        "Move to Test clicked"
+                    );
+
+                    // Validation
+                    if (
+                        ["Department", "Consultancy"]
+                            .includes(
+                                frm.doc.client_type
+                            ) &&
+                        frm.doc.is_master_sample
+                    ) {
+
+                        frappe.msgprint({
+                            title:
+                                __("Selection Not Allowed"),
+                            indicator:
+                                "orange",
+                            message:
+                                __(
+                                    "Only generated samples can be moved to test for Department and Consultancy clients."
+                                )
+                        });
+
+                        return;
+                    }
+
+                    // Status guard
+                    if (
+                        frm.doc.status !==
+                        "With Research Assistant"
+                    ) {
+
+                        frappe.msgprint({
+                            title:
+                                __("Status Error"),
+                            indicator:
+                                "red",
+                            message:
+                                __(
+                                    "Either not assigned/ Completed!"
+                                )
+                        });
+
+                        return;
+                    }
+
+                    // Duplicate check
+                    frappe.call({
+                        method:
+                            "frappe.client.get_list",
+
+                        args: {
+                            doctype:
+                                "Soil Test Result",
+
+                            filters: {
+                                main_sample_id:
+                                    frm.doc.name
+                            },
+
+                            fields: ["name"],
+                            limit_page_length: 1
                         },
-                        fields: ["name"],
-                        limit_page_length: 1
-                    },
 
-                    callback: function (r) {
+                        callback: function (r) {
 
-                        console.log("API Response:", r);
-
-                        if (r && r.message && r.message.length > 0) {
-
-                            let existing_name = r.message[0].name;
-
-                            frappe.confirm(
-                                `Soil Test Result already exists (${existing_name})<br><br>Open existing record?`,
-
-                                function () {
-
-                                    frappe.set_route(
-                                        'Form',
-                                        'Soil Test Result',
-                                        existing_name
-                                    );
-
-                                },
-
-                                function () {}
-
+                            console.log(
+                                "API Response:",
+                                r
                             );
 
-                        } else {
+                            if (
+                                r &&
+                                r.message &&
+                                r.message.length > 0
+                            ) {
 
-                            create_test_result(frm);
+                                let existing_name =
+                                    r.message[0].name;
+
+                                frappe.confirm(
+                                    `Soil Test Result already exists (${existing_name})<br><br>Open existing record?`,
+
+                                    function () {
+                                        frappe.set_route(
+                                            "Form",
+                                            "Soil Test Result",
+                                            existing_name
+                                        );
+                                    },
+
+                                    function () {}
+                                );
+
+                            } else {
+
+                                create_test_result(
+                                    frm
+                                );
+
+                            }
+                        },
+
+                        error: function () {
+
+                            create_test_result(
+                                frm
+                            );
 
                         }
-                    },
+                    });
 
-                    error: function () {
-
-                        create_test_result(frm);
-
-                    }
-                });
-
-            }).addClass('btn-primary');
+                }
+            ).addClass("btn-primary");
         }
     }
 });
+// =========================
+// IMPORT TEMPLATE
+// =========================
+async function import_template(frm) {
 
+    await frappe.require(
+        "/assets/slis_app/js/xlsx.full.min.js"
+    );
 
+    let input =
+        $('<input type="file" accept=".xlsx,.xls">');
+
+    input.on(
+        "change",
+        function (e) {
+
+            let file =
+                e.target.files[0];
+
+            if (!file)
+                return;
+
+            let reader =
+                new FileReader();
+
+            reader.onload =
+                function (evt) {
+
+                    let workbook =
+                        XLSX.read(
+                            evt.target.result,
+                            {
+                                type: "binary"
+                            }
+                        );
+
+                    let sheet =
+                        workbook.Sheets[
+                            workbook.SheetNames[0]
+                        ];
+
+                    let rows =
+                        XLSX.utils
+                            .sheet_to_json(
+                                sheet,
+                                {
+                                    defval: ""
+                                }
+                            );
+
+                    fill_table_from_excel(
+                        frm,
+                        rows
+                    );
+                };
+
+            reader.readAsBinaryString(
+                file
+            );
+        }
+    );
+
+    input.click();
+}
+function fill_table_from_excel(
+    frm,
+    rows
+) {
+
+    rows.forEach(
+        excel_row => {
+
+            let lab_code =
+                excel_row["Lab Code"];
+
+            if (!lab_code)
+                return;
+
+            let tr =
+                frm.fields_dict.html
+                    .$wrapper
+                    .find("tbody tr")
+                    .filter(function () {
+
+                        let td_index =
+                            $(this)
+                                .find("td")
+                                .length > 2
+                                ? 1
+                                : 0;
+
+                        return (
+                            $(this)
+                                .find("td")
+                                .eq(td_index)
+                                .text()
+                                .trim() ===
+                            lab_code
+                        );
+                    });
+
+            if (!tr.length)
+                return;
+
+            tr.find(".test-input")
+                .each(function () {
+
+                    let input =
+                        $(this);
+
+                    let test =
+                        input.data(
+                            "test"
+                        );
+
+                    if (
+                        excel_row[test] !==
+                        undefined
+                    ) {
+
+                        input.val(
+                            excel_row[
+                                test
+                            ]
+                        );
+
+                    }
+                });
+        }
+    );
+
+    frappe.show_alert({
+        message:
+            "Excel imported successfully. Click Save Table Data.",
+        indicator:
+            "green"
+    });
+}
+
+// =========================
+// DOWNLOAD TEMPLATE
+// =========================
+async function export_template(frm) {
+
+    console.log("Download Template Clicked");
+
+    await frappe.require(
+        "/assets/slis_app/js/xlsx.full.min.js"
+    );
+
+    frappe.show_alert({
+        message: __("Preparing template download..."),
+        indicator: "blue"
+    });
+
+    let client_type =
+        (frm.doc.client_type || "")
+            .toLowerCase()
+            .trim();
+
+    let is_consultancy =
+        client_type === "consultancy";
+
+    // Header
+    let headers = [];
+
+    if (!is_consultancy) {
+        headers.push("Sample ID");
+    }
+
+    headers.push("Lab Code");
+
+    if (is_consultancy) {
+        headers.push("Reference Name");
+    }
+
+    // HTML table-il already kaanunna test names edukkuka
+    frm.fields_dict.html.$wrapper
+        .find("thead th")
+        .each(function (index) {
+
+            let text =
+                $(this).text().trim();
+
+            if (
+                text !== "Sample ID" &&
+                text !== "Lab Code" &&
+                text !== "Reference Name"
+            ) {
+                headers.push(text);
+            }
+        });
+
+    let data = [headers];
+
+    // Rows
+    (frm.doc.sample_data || []).forEach(
+        row => {
+
+            let row_data = [];
+
+            if (!is_consultancy) {
+                row_data.push(
+                    row.sample_id || ""
+                );
+            }
+
+            row_data.push(
+                row.lab_code || ""
+            );
+
+            if (is_consultancy) {
+                row_data.push(
+                    row.reference_name || ""
+                );
+            }
+
+            // Empty cells for test values
+            for (
+                let i =
+                    headers.length -
+                    row_data.length;
+                i > 0;
+                i--
+            ) {
+                row_data.push("");
+            }
+
+            data.push(row_data);
+        }
+    );
+
+    const ws =
+        XLSX.utils
+            .aoa_to_sheet(data);
+
+    const wb =
+        XLSX.utils
+            .book_new();
+
+    XLSX.utils
+        .book_append_sheet(
+            wb,
+            ws,
+            "Sample Data"
+        );
+
+    XLSX.writeFile(
+        wb,
+        `${frm.doc.name}_Template.xlsx`
+    );
+
+    frappe.show_alert({
+        message:
+            __("Template downloaded successfully"),
+        indicator:
+            "green"
+    }, 5);
+}
 // =========================
 // CREATE SOIL TEST RESULT
 // =========================
 async function create_test_result(frm) {
 
-    await frappe.model.with_doctype('Soil Test Result');
-
-    let new_doc = frappe.model.get_new_doc('Soil Test Result');
-
-    // ✅ BASIC
-    new_doc.main_sample_id = frm.doc.name;
-
-    new_doc.client = frm.doc.client;
-    new_doc.client_type = frm.doc.client_type;
-
-    new_doc.latitude = frm.doc.latitude;
-    new_doc.longitude = frm.doc.longitude;
-
-    new_doc.plot_size = frm.doc.plot_size;
-
-    new_doc.name_of_type = frm.doc.name_of_type;
-
-    new_doc.type_of_collection = frm.doc.type_of_collection;
-
-    new_doc.number_of_sample = frm.doc.number_of_samples;
-
-    new_doc.lab_code_prefix = frm.doc.lab_code_prefix;
-
-    new_doc.lab_code_start = frm.doc.lab_code_start;
-
-    // =========================
-    // DATA MOVE
-    // =========================
-    new_doc.test_sample_data = [];
-
-    // ✅ Farmer skip sample_data
-    if (
-        frm.doc.client_type !== "Farmer" &&
-        frm.doc.sample_data &&
-        frm.doc.sample_data.length > 0
-    ) {
-
-        frm.doc.sample_data.forEach(row => {
-
-            let is_consultancy =
-                frm.doc.client_type === "Consultancy";
-
-            new_doc.test_sample_data.push({
-
-                sample_id:
-                    is_consultancy
-                        ? row.lab_code
-                        : row.sample_id,
-
-                lab_code: row.lab_code,
-
-                values_json:
-                    row.values_json || "{}"
-
-            });
-
-        });
-    }
-
-    // =========================
-    // TESTS
-    // =========================
-    for (let row of (frm.doc.tests || [])) {
-
-        if (!row.test_name)
-            continue;
-
-        try {
-
-            let pkg =
-                await frappe.db.get_doc(
-                    'Soil Test Package',
-                    row.test_name
-                );
-
-            // ✅ INCLUDED TESTS EXISTS
-            if (
-                pkg.included_tests &&
-                pkg.included_tests.length > 0
-            ) {
-
-                pkg.included_tests.forEach(test_row => {
-
-                    if (!test_row.linked_package)
-                        return;
-
-                    let child =
-                        frappe.model.add_child(
-                            new_doc,
-                            'results_table'
-                        );
-
-                    child.test_item =
-                        test_row.linked_package;
-
-                });
-
-            }
-
-            // ✅ NO INCLUDED TESTS
-            else {
-
-                let child =
-                    frappe.model.add_child(
-                        new_doc,
-                        'results_table'
-                    );
-
-                child.test_item =
-                    row.test_name;
-
-            }
-
-        }
-
-        catch (e) {
-
-            console.log(e);
-
-            let child =
-                frappe.model.add_child(
-                    new_doc,
-                    'results_table'
-                );
-
-            child.test_item =
-                row.test_name;
-
-        }
-    }
-
-    // =========================
-    // CROPS
-    // =========================
-    if (
-        frm.doc.crops_list &&
-        frm.doc.crops_list.length > 0
-    ) {
-
-        frm.doc.crops_list.forEach(row => {
-
-            let child =
-                frappe.model.add_child(
-                    new_doc,
-                    'recommendations_table'
-                );
-
-            child.crop =
-                row.crop_name;
-
-        });
-    }
-
-    // =========================
-    // OPEN FORM
-    // =========================
-    frappe.set_route(
-        'Form',
-        'Soil Test Result',
-        new_doc.name
+    await frappe.model.with_doctype(
+        "Soil Test Result"
     );
+
+    let new_doc =
+        frappe.model.get_new_doc(
+            "Soil Test Result"
+        );
+
+    // Existing create_test_result code
+    // ivide ningalude current code
+    // exact aayi continue cheyyuka
 }
 
-//show the variant in list view
 
+// =========================
+// LIST VIEW SETTINGS
+// =========================
 frappe.listview_settings[
-    'Soil Sample Collection'
+    "Soil Sample Collection"
 ] = {
 
     onload(listview) {
 
         listview.filter_area.add([
-
             [
-                'Soil Sample Collection',
-                'is_generated_sample',
-                '=',
+                "Soil Sample Collection",
+                "is_generated_sample",
+                "=",
                 1
             ]
-
         ]);
-    }
-};
 
- pkg.included_tests.forEach(test_row => {
-
-
-
- if (!test_row.linked_package)
-
- return;
-
-
-
- let child =
-
- frappe.model.add_child(
-
- new_doc,
-
- 'results_table'
-
- );
-
-
-
- child.test_item =
-
- test_row.linked_package;
-
-
-
- });
-
-
-
- }
-
-
-
- // ✅ NO INCLUDED TESTS
-
- else {
-
-
-
- let child =
-
- frappe.model.add_child(
-
- new_doc,
-
- 'results_table'
-
- );
-
-
-
- child.test_item =
-
- row.test_name;
-
-
-
- }
-
-
-
- }
-
-
-
- catch (e) {
-
-
-
- console.log(e);
-
-
-
- let child =
-
- frappe.model.add_child(
-
- new_doc,
-
- 'results_table'
-
- );
-
-
-
- child.test_item =
-
- row.test_name;
-
-
-
- }
-
- }
-
-
-
- // =========================
-
- // CROPS
-
- // =========================
-
- if (
-
- frm.doc.crops_list &&
-
- frm.doc.crops_list.length > 0
-
- ) {
-
-
-
- frm.doc.crops_list.forEach(row => {
-
-
-
- let child =
-
- frappe.model.add_child(
-
- new_doc,
-
- 'recommendations_table'
-
- );
-
-
-
- child.crop =
-
- row.crop_name;
-
-
-
- });
-
- }
-
-
-
- // =========================
-
- // OPEN FORM
-
- // =========================
-
- frappe.set_route(
-
- 'Form',
-
- 'Soil Test Result',
-
- new_doc.name
-
- );
-
-}
-
-
-
-
-
-
-
-
-
-//hide the default button and show only the custom buttons:
-frappe.listview_settings['Soil Sample Collection'] = {
-    onload: function(listview) {
-        setTimeout(function() {
+        setTimeout(function () {
             $('[data-label="New"]').hide();
         }, 300);
     }

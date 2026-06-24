@@ -77,7 +77,8 @@ def sample_permission_query(user=None):
             f"AND target_lab = '{employee.custom_lab_name}' "
             f"AND status IN ("
             f"'With Senior Chemist', "
-            f"'Assigned to Research Assistant', "
+
+            f"'With Research Assistant', "
             f"'Transferred', "
             f"'Returned', "
             f"'completed', "
